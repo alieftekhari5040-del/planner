@@ -1,0 +1,31 @@
+name: پیشنهاد قابلیت
+description: پیشنهاد مشخص برای بهبود برنامه.
+title: "feat: "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: مسئله یا نیاز
+      description: این قابلیت چه مسئله‌ای را برای کاربر حل می‌کند؟
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: راه‌حل پیشنهادی
+      description: رفتار یا تجربه‌ی مورد انتظار را توضیح دهید.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: گزینه‌های جایگزین
+      description: چه راه‌حل‌های دیگری بررسی کرده‌اید؟
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: مشارکت
+      options:
+        - label: مایل هستم برای پیاده‌سازی این قابلیت Pull Request ارسال کنم.

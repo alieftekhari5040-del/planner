@@ -1,0 +1,16 @@
+{
+  "name": "برنامه‌ریز صعود | برنامه‌ریزی روزانه",
+  "short_name": "برنامه‌ریز صعود",
+  "description": "پلنر روزانه و ردیاب حرفه‌ای عادت‌های شخصی",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#060412",
+  "theme_color": "#7c3aed",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}

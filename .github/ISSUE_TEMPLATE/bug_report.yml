@@ -1,0 +1,60 @@
+name: گزارش باگ
+description: گزارش دقیق مشکلی که قابل بازتولید است.
+title: "bug: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        لطفاً اطلاعات حساس، فایل پشتیبان JSON یا داده‌ی شخصی را در گزارش قرار ندهید.
+  - type: textarea
+    id: summary
+    attributes:
+      label: شرح مشکل
+      description: چه چیزی درست کار نمی‌کند؟
+      placeholder: شرح کوتاه و روشن مشکل
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: مراحل بازتولید
+      description: مراحل دقیق وقوع مشکل را بنویسید.
+      placeholder: |
+        1. به ... بروید
+        2. روی ... کلیک کنید
+        3. نتیجه‌ی ... را ببینید
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: نتیجه‌ی مورد انتظار
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: نتیجه‌ی واقعی
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: مرورگر و نسخه
+      placeholder: Firefox 128، Chrome 128، Safari ...
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: سیستم‌عامل
+      placeholder: Windows، macOS، Linux، Android یا iOS
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: تصویر یا اطلاعات تکمیلی
+      description: در صورت نیاز، تصویر یا log پاک‌سازی‌شده را اضافه کنید.
