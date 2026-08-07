@@ -1,16 +1,57 @@
 {
   "name": "برنامه‌ریز صعود | برنامه‌ریزی روزانه",
   "short_name": "برنامه‌ریز صعود",
-  "description": "پلنر روزانه و ردیاب حرفه‌ای عادت‌های شخصی",
+  "description": "پلنر روزانه و ردیاب حرفه‌ای عادت‌های شخصی با تقویم شمسی - نصب‌پذیر و آفلاین",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "orientation": "portrait",
+  "dir": "rtl",
+  "lang": "fa",
   "background_color": "#060412",
   "theme_color": "#7c3aed",
+  "categories": ["productivity", "lifestyle"],
   "icons": [
+    {
+      "src": "/pwa-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
     {
       "src": "/favicon.svg",
       "sizes": "192x192 512x512",
-      "type": "image/svg+xml"
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "پلنر امروز",
+      "short_name": "امروز",
+      "description": "مشاهده برنامه امروز",
+      "url": "/?tab=planner",
+      "icons": [{ "src": "/pwa-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "ردیاب عادت",
+      "short_name": "عادت‌ها",
+      "description": "ماتریس هفتگی عادت‌ها",
+      "url": "/?tab=habits",
+      "icons": [{ "src": "/pwa-192x192.png", "sizes": "192x192" }]
     }
   ]
 }

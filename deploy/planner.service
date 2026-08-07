@@ -1,0 +1,28 @@
+[Unit]
+Description=برنامه‌ریز صعود - Auto Start on Boot (Vite PWA)
+After=network.target network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=60
+StartLimitBurst=3
+
+[Service]
+Type=simple
+User=%i
+WorkingDirectory=/home/%i/planner
+# برای Vite PWA - اول بیلد بگیر، بعد preview روی 4173
+ExecStart=/usr/bin/npm run preview -- --host 0.0.0.0 --port 4173
+Restart=always
+RestartSec=5
+TimeoutStartSec=30
+TimeoutStopSec=10
+KillMode=mixed
+Environment=NODE_ENV=production
+Environment=PORT=4173
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=planner
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

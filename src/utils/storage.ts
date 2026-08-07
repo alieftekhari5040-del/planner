@@ -65,11 +65,46 @@ export function createDefaultDayData(jy: number, jm: number, jd: number, dayName
   };
 }
 
-const STORAGE_PREFIX = 'ascent_planner_';
-const HISTORY_STORAGE_KEY = 'ascent_planner_history_keys';
+const STORAGE_PREFIX = 'ascent_planner_v3_';
+const HISTORY_STORAGE_KEY = 'ascent_planner_history_keys_v3';
+const LEGACY_PREFIX = 'ascent_planner_';
+const LEGACY_HISTORY_KEY = 'ascent_planner_history_keys';
+const LEGACY_HISTORY_KEY_V2 = 'ascent_planner_history_keys_v2';
+const LEGACY_PREFIX_V2 = 'ascent_planner_v2_';
+
+function cleanupLegacyPlannerData(): void {
+  try {
+    // حذف تاریخچه‌ی قدیمی نمایشی تا سایت بدون تیک شروع شود (v1 و v2)
+    for (const k of [LEGACY_HISTORY_KEY, LEGACY_HISTORY_KEY_V2]) {
+      if (localStorage.getItem(k)) localStorage.removeItem(k);
+    }
+    // حذف داده‌های روزانه‌ی قدیمی (تمام کلیدهای قدیمی را پاک کن تا شروع صفر باشد)
+    const keysToRemove: string[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (
+        key &&
+        key.startsWith(LEGACY_PREFIX) &&
+        !key.startsWith(STORAGE_PREFIX) &&
+        key !== HISTORY_STORAGE_KEY &&
+        key !== LEGACY_HISTORY_KEY &&
+        key !== LEGACY_HISTORY_KEY_V2
+      ) {
+        // اگر کلید قدیمی v2 هم بود پاک کن (مثل ascent_planner_v2_1405-..)
+        if (key.startsWith(LEGACY_PREFIX_V2) || key.startsWith(LEGACY_PREFIX)) {
+          keysToRemove.push(key);
+        }
+      }
+    }
+    keysToRemove.forEach((k) => localStorage.removeItem(k));
+  } catch {
+    // ignore
+  }
+}
 
 function readHistoryKeys(): string[] {
   try {
+    cleanupLegacyPlannerData();
     const raw = localStorage.getItem(HISTORY_STORAGE_KEY);
     const parsed: unknown = raw ? JSON.parse(raw) : [];
     return Array.isArray(parsed) && parsed.every((key): key is string => typeof key === 'string')

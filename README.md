@@ -67,20 +67,34 @@ npm run dev
 
 ```text
 .
-├── .github/                 # قالب‌های GitHub و تنظیمات Dependabot
+├── .github/                 # قالب‌ها و تنظیمات Dependabot
+├── .vscode/                 # پیشنهادات افزونه و تنظیمات ویرایشگر
 ├── public/                  # فایل‌های عمومی، favicon و manifest
 ├── src/
-│   ├── components/          # اجزای رابط کاربری و پنجره‌های محاوره‌ای
+│   ├── components/
+│   │   ├── analytics/       # داشبورد و تحلیل بهره‌وری
+│   │   ├── habits/          # ردیاب عادت و ماتریس هفتگی
+│   │   ├── layout/          # هدر، فوتر و تب‌های اصلی
+│   │   ├── modals/          # مودال‌های تقویم، پومودورو، قالب‌ها و تاریخچه
+│   │   ├── planner/         # کارت‌های برنامه‌ی روزانه (اولویت، هدف، روتین، زمان‌بندی، آموخته‌ها)
+│   │   └── index.ts         # barrel صادرات کامپوننت‌ها
+│   ├── hooks/               # هوک‌های سفارشی (تاریخ جلالی، داده‌ی روزانه، عادت‌ها، جشن تکمیل)
+│   ├── styles/              # استایل سراسری (index.css)
 │   ├── types/               # مدل‌های TypeScript
-│   ├── utils/               # تقویم شمسی، ذخیره‌سازی، صدا و داده‌ی نمونه
-│   ├── App.tsx
-│   ├── index.css
-│   └── main.tsx
-├── tests/                   # تست‌های واحد
+│   ├── utils/               # تقویم شمسی، ذخیره‌سازی، صدا، پشتیبان و داده‌ی نمونه
+│   ├── App.tsx              # ترکیب تب‌ها و مدیریت وضعیت سطح بالا (سبک‌شده با هوک‌ها)
+│   ├── main.tsx
+│   ├── vite-env.d.ts
+│   └── index.css            # re-export برای سازگاری (canonical در styles/index.css)
+├── tests/
+│   └── utils/               # تست‌های واحد متناظر با src/utils
+├── vite.config.ts           # تنظیمات Vite + Vitest
+├── tsconfig.app.json
+├── tsconfig.node.json
+├── tsconfig.tests.json
+├── .oxlintrc.json
+├── .editorconfig
 ├── CONTRIBUTING.md
-├── CODE_OF_CONDUCT.md
-├── SECURITY.md
-├── LICENSE
 └── NOTICE.md
 ```
 

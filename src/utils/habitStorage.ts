@@ -1,46 +1,49 @@
 import type { Habit, HabitStats } from '../types/habits';
 import { getDateKey, getJalaliDateForOffset, getTodayJalali, parseDateKey } from './jalali';
+import { z } from 'zod';
 
-const HABITS_STORAGE_KEY = 'ascent_pro_habits_data_v1';
+const HABITS_STORAGE_KEY = 'ascent_pro_habits_data_v3';
+const LEGACY_HABITS_KEY = 'ascent_pro_habits_data_v1';
+const LEGACY_HABITS_KEY_V2 = 'ascent_pro_habits_data_v2';
+
+// SECURITY: Fixed B01 — جایگزینی isStoredHabit دستی با zod برای ولیدیشن عمیق history
+// قبلاً history: {completed:"yes"} از فیلتر عبور می‌کرد، اکنون با Zod رد می‌شود
+const HabitLogEntrySchema = z.object({
+  completed: z.boolean(),
+  value: z.number().optional(),
+  notes: z.string().max(500).optional(),
+  timestamp: z.number().optional(),
+});
+
+const HabitSchema = z.object({
+  id: z.string().min(1).max(100),
+  name: z.string().min(1).max(100),
+  category: z.enum(['health', 'mind', 'productivity', 'learning', 'fitness', 'lifestyle']),
+  icon: z.string().min(1).max(10),
+  color: z.string().min(4).max(20),
+  targetType: z.enum(['boolean', 'numeric', 'timer']),
+  targetValue: z.number().min(0).max(100000),
+  unit: z.string().min(1).max(20),
+  frequency: z.enum(['daily', 'weekdays', 'weekends', '3_times_week', '5_times_week']),
+  timeOfDay: z.enum(['morning', 'afternoon', 'evening', 'anytime']).optional(),
+  atomicCue: z.string().max(500).optional(),
+  atomicReward: z.string().max(500).optional(),
+  history: z.record(z.string().regex(/^\d{3,4}-\d{2}-\d{2}$/), HabitLogEntrySchema),
+  createdAt: z.string().regex(/^\d{3,4}-\d{2}-\d{2}$/),
+  isArchived: z.boolean().optional(),
+  freezeDays: z.array(z.string().regex(/^\d{3,4}-\d{2}-\d{2}$/)).optional(),
+  currentValue: z.number().optional(),
+});
 
 function isStoredHabit(value: unknown): value is Habit {
-  if (typeof value !== 'object' || value === null) return false;
-  const habit = value as Partial<Habit>;
-  return (
-    typeof habit.id === 'string' &&
-    typeof habit.name === 'string' &&
-    typeof habit.category === 'string' &&
-    typeof habit.icon === 'string' &&
-    typeof habit.color === 'string' &&
-    typeof habit.targetType === 'string' &&
-    typeof habit.targetValue === 'number' &&
-    typeof habit.unit === 'string' &&
-    typeof habit.frequency === 'string' &&
-    typeof habit.createdAt === 'string' &&
-    typeof habit.history === 'object' &&
-    habit.history !== null &&
-    !Array.isArray(habit.history)
-  );
+  return HabitSchema.safeParse(value).success;
 }
 
+// تمام نمونه‌های نمایشی پاک شد — تاریخچه اکنون واقعی و خالی است
+// ماتریس دیگر با روزهای واقعی همگام است: هر سلول = یک کلید جلالی واقعی (YYYY-MM-DD) در localStorage
 export function getDefaultHabits(): Habit[] {
   const today = getTodayJalali();
   const todayKey = getDateKey(today.jy, today.jm, today.jd);
-
-  // Generate realistic history for a first launch without assuming every month has 30 days.
-  const generateMockHistory = (completionProbability: number) => {
-    const history: Record<string, { completed: boolean; value?: number }> = {};
-    for (let i = 28; i >= 0; i--) {
-      const target = getJalaliDateForOffset(today.jy, today.jm, today.jd, -i);
-      const key = getDateKey(target.jy, target.jm, target.jd);
-      // Keep starter data deterministic so the first screen is reproducible and testable.
-      const score = (i * 47 + Math.round(completionProbability * 100)) % 100;
-      if (score < completionProbability * 100) {
-        history[key] = { completed: true, value: 1 };
-      }
-    }
-    return history;
-  };
 
   return [
     {
@@ -48,7 +51,7 @@ export function getDefaultHabits(): Habit[] {
       name: 'نوشیدن ۲ لیتر آب روزانه',
       category: 'health',
       icon: '💧',
-      color: '#38bdf8', // Neon Sky Blue
+      color: '#38bdf8',
       targetType: 'numeric',
       targetValue: 2000,
       unit: 'میلی‌لیتر',
@@ -57,14 +60,14 @@ export function getDefaultHabits(): Habit[] {
       atomicCue: 'بلافاصله بعد از بیدار شدن و قبل از هر وعده غذایی یک لیوان بزرگ آب می‌نوشم.',
       atomicReward: 'احساس شادابی پوست و افزایش تمرکز مغز',
       createdAt: todayKey,
-      history: generateMockHistory(0.85),
+      history: {}, // واقعی: خالی تا کاربر تیک بزند
     },
     {
       id: 'h-reading',
       name: 'مطالعه کتاب تخصصی و رشد فردی',
       category: 'learning',
       icon: '📚',
-      color: '#a855f7', // Neon Purple
+      color: '#a855f7',
       targetType: 'timer',
       targetValue: 30,
       unit: 'دقیقه',
@@ -73,14 +76,14 @@ export function getDefaultHabits(): Habit[] {
       atomicCue: 'ساعت ۲۱:۰۰ بعد از شام، کتاب را روی میز کنار تخت باز می‌کنم.',
       atomicReward: 'افزایش دانش و آرامش قبل از خواب عمیق',
       createdAt: todayKey,
-      history: generateMockHistory(0.75),
+      history: {},
     },
     {
       id: 'h-workout',
       name: 'ورزش، باشگاه یا پیاده‌روی سریع',
       category: 'fitness',
       icon: '🏋️‍♂️',
-      color: '#f43f5e', // Neon Rose
+      color: '#f43f5e',
       targetType: 'timer',
       targetValue: 45,
       unit: 'دقیقه',
@@ -89,14 +92,14 @@ export function getDefaultHabits(): Habit[] {
       atomicCue: 'ساعت ۱۷:۳۰ لباس ورزشی را می‌پوشم و کفش‌ها را جفت می‌کنم.',
       atomicReward: 'تخلیه استرس کاری و ساخت فیزیک بدنی متناسب',
       createdAt: todayKey,
-      history: generateMockHistory(0.7),
+      history: {},
     },
     {
       id: 'h-deepwork',
       name: 'بلاک کار عمیق و برنامه‌نویسی',
       category: 'productivity',
       icon: '⚡',
-      color: '#fbbf24', // Neon Amber
+      color: '#fbbf24',
       targetType: 'numeric',
       targetValue: 4,
       unit: 'بلاک ۹۰ دقیقه‌ای',
@@ -105,14 +108,14 @@ export function getDefaultHabits(): Habit[] {
       atomicCue: 'بستن تمام تب‌های شبکه‌های اجتماعی و روشن کردن حالت فوکوس پومودورو.',
       atomicReward: 'پیشرفت چشمگیر در تسک‌های پیچیده فنی',
       createdAt: todayKey,
-      history: generateMockHistory(0.8),
+      history: {},
     },
     {
       id: 'h-meditation',
       name: 'مدیتیشن و تنفس عمیق آگاهانه',
       category: 'mind',
       icon: '🧘',
-      color: '#34d399', // Neon Emerald
+      color: '#34d399',
       targetType: 'timer',
       targetValue: 10,
       unit: 'دقیقه',
@@ -121,14 +124,14 @@ export function getDefaultHabits(): Habit[] {
       atomicCue: 'صبح‌ها بعد از مرتب کردن تخت، ۵ دقیقه در سکوت چشم‌ها را می‌بندم.',
       atomicReward: 'کاهش اضطراب روزمره و تسلط بر احساسات',
       createdAt: todayKey,
-      history: generateMockHistory(0.6),
+      history: {},
     },
     {
       id: 'h-sleep',
       name: 'خاموشی صفحات نمایش و خواب قبل ۲۳:۳۰',
       category: 'lifestyle',
       icon: '🌙',
-      color: '#818cf8', // Neon Indigo
+      color: '#818cf8',
       targetType: 'boolean',
       targetValue: 1,
       unit: 'بار',
@@ -137,13 +140,22 @@ export function getDefaultHabits(): Habit[] {
       atomicCue: 'ساعت ۲۳:۰۰ گوشی را در حالت خواب در خارج از اتاق خواب قرار می‌دهم.',
       atomicReward: 'بیدار شدن با نشاط بالا در ساعت ۶:۰۰ صبح',
       createdAt: todayKey,
-      history: generateMockHistory(0.7),
+      history: {},
     }
   ];
 }
 
 export function loadHabits(): Habit[] {
   try {
+    // پاکسازی کامل نمونه‌های قبلی تا سایت بدون تیک و واقعی شروع شود (v1 و v2 هر دو نمایشی بودند)
+    for (const k of [LEGACY_HABITS_KEY, LEGACY_HABITS_KEY_V2]) {
+      if (localStorage.getItem(k)) {
+        try {
+          localStorage.removeItem(k);
+        } catch {}
+      }
+    }
+
     const raw = localStorage.getItem(HABITS_STORAGE_KEY);
     if (raw) {
       const parsed: unknown = JSON.parse(raw);
