@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: گزارش آسیب‌پذیری امنیتی
+    url: https://github.com/alieftekhari5040-del/planner/security/advisories/new
+    about: لطفاً آسیب‌پذیری‌های امنیتی را در Issue عمومی ثبت نکنید.
