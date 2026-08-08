@@ -13,7 +13,8 @@ import {
   getDateKey,
   parseDateKey,
   getJalaliDateForOffset,
-  addDaysToJalali
+  addDaysToJalali,
+  PERSIAN_WEEKDAYS
 } from './utils/jalali';
 
 import {
@@ -32,7 +33,7 @@ import { Header } from './components/Header';
 import { DateSection } from './components/DateSection';
 import { PrioritiesCard } from './components/PrioritiesCard';
 import { GoalsCard } from './components/GoalsCard';
-import { RoutinesCard } from './components/RoutinesCard';
+
 import { ScheduleCard } from './components/ScheduleCard';
 import { LessonsCard } from './components/LessonsCard';
 import { Footer } from './components/Footer';
@@ -150,7 +151,20 @@ export const App: React.FC = () => {
   // Handlers
   const handleSelectDayOfWeek = (day: string) => {
     playTickSound(soundEnabled);
-    setPlannerData((prev) => ({ ...prev, selectedDayOfWeek: day }));
+    // پیدا کردن نزدیک‌ترین روز هفته (در ۷ روز آینده و گذشته)
+    const targetIdx = PERSIAN_WEEKDAYS.indexOf(day);
+    const currentIdx = PERSIAN_WEEKDAYS.indexOf(currentDayName);
+    if (targetIdx === -1) return;
+    // offset: کمترین فاصله بین روز فعلی تا روز هدف در همان هفته
+    let delta = targetIdx - currentIdx;
+    // نگه داشتن توی بازه -3 تا +3 (نزدیک‌ترین روز)
+    if (delta > 3) delta -= 7;
+    if (delta < -3) delta += 7;
+    const target = addDaysToJalali(currentJy, currentJm, currentJd, delta);
+    setCurrentJy(target.jy);
+    setCurrentJm(target.jm);
+    setCurrentJd(target.jd);
+    setCurrentDayName(target.dayName);
   };
 
   const handleChangeDateText = (text: string) => {
@@ -215,15 +229,7 @@ export const App: React.FC = () => {
     }));
   };
 
-  const handleRoutineToggle = (id: string) => {
-    playTickSound(soundEnabled);
-    setPlannerData((prev) => ({
-      ...prev,
-      routines: prev.routines.map((item) =>
-        item.id === id ? { ...item, completed: !item.completed } : item
-      ),
-    }));
-  };
+
 
   const handleScheduleToggle = (id: string) => {
     playTickSound(soundEnabled);
@@ -373,41 +379,26 @@ export const App: React.FC = () => {
               onGoToToday={handleGoToToday}
             />
 
-            {/* Main Grid: Split into Left Column & Right Column matching the image */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 md:gap-6 items-stretch">
-              {/* Left Column in RTL (Stacked 3 Cards): Priorities, Goals, Habits */}
-              <div className="lg:col-span-5 flex flex-col gap-5 md:gap-6 justify-between">
-                {/* Card 1: اولویت کارها */}
-                <PrioritiesCard
-                  priorities={plannerData.priorities}
-                  onChange={(priorities) => setPlannerData((prev) => ({ ...prev, priorities }))}
-                  onItemToggle={handlePriorityToggle}
-                />
+            {/* ردیف بالا: برنامه روز (تمام عرض) */}
+            <ScheduleCard
+              schedule={plannerData.schedule}
+              onChange={(schedule) => setPlannerData((prev) => ({ ...prev, schedule }))}
+              onItemToggle={handleScheduleToggle}
+              onApplyPresetTasks={handleApplyPresetSchedule}
+            />
 
-                {/* Card 2: اهداف امروز */}
-                <GoalsCard
-                  goals={plannerData.goals}
-                  onChange={(goals) => setPlannerData((prev) => ({ ...prev, goals }))}
-                  onGoalToggle={handleGoalToggle}
-                />
-
-                {/* Card 3: اولویت امروز (عادت‌های اصلی: مطالعه، رشد فردی، بدنسازی) */}
-                <RoutinesCard
-                  routines={plannerData.routines}
-                  onChange={(routines) => setPlannerData((prev) => ({ ...prev, routines }))}
-                  onItemToggle={handleRoutineToggle}
-                />
-              </div>
-
-              {/* Right Column in RTL (Clean 14-row checklist table without hardcoded hours): برنامه‌ی امروز */}
-              <div className="lg:col-span-7 flex flex-col">
-                <ScheduleCard
-                  schedule={plannerData.schedule}
-                  onChange={(schedule) => setPlannerData((prev) => ({ ...prev, schedule }))}
-                  onItemToggle={handleScheduleToggle}
-                  onApplyPresetTasks={handleApplyPresetSchedule}
-                />
-              </div>
+            {/* ردیف پایین: اولویت‌ها و اهداف کنار هم */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 md:gap-6">
+              <PrioritiesCard
+                priorities={plannerData.priorities}
+                onChange={(priorities) => setPlannerData((prev) => ({ ...prev, priorities }))}
+                onItemToggle={handlePriorityToggle}
+              />
+              <GoalsCard
+                goals={plannerData.goals}
+                onChange={(goals) => setPlannerData((prev) => ({ ...prev, goals }))}
+                onGoalToggle={handleGoalToggle}
+              />
             </div>
 
             {/* Bottom Full-Width Card: درس‌هایی که امروز گرفتم */}
