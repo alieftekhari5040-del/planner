@@ -74,17 +74,17 @@ const ScheduleCardComponent: React.FC<ScheduleCardProps> = ({
           </div>
         </div>
 
-        {/* Schedule Table Grid — تمام عرض ولی با عرض متعادل و تمیز (نه زشتِ کشیده) */}
+        {/* Schedule Table Grid — استاندارد 56px هر ردیف، یک‌دست و تمیز */}
         <div className="surface-inset rounded-2xl overflow-hidden divide-y divide-purple-500/25 flex-1 max-w-4xl mx-auto w-full">
           {schedule.map((item, index) => (
             <div
               key={item.id}
-              className={`flex items-stretch transition-colors group min-h-[52px] ${
+              className={`flex items-center transition-colors group h-14 ${
                 item.completed ? 'bg-purple-950/50' : 'hover:bg-purple-900/20'
               }`}
             >
               {/* Checkbox column with Tactile Rounded Neon Rectangle */}
-              <div className="p-3 shrink-0 border-l border-purple-500/25 flex items-start justify-center pt-4">
+              <div className="p-3 shrink-0 border-l border-purple-500/25 flex items-center justify-center">
                 <button
                   type="button"
                   onClick={() => onItemToggle(item.id)}
@@ -101,30 +101,19 @@ const ScheduleCardComponent: React.FC<ScheduleCardProps> = ({
                 </button>
               </div>
 
-              {/* Row index number (بدون ستون ساعت - ردیف‌های منظم) */}
-              <div className="w-10 shrink-0 text-center border-l border-purple-500/25 text-xs font-bold text-purple-400/60 font-mono flex items-start justify-center pt-4">
+              {/* Row index */}
+              <div className="w-10 shrink-0 text-center border-l border-purple-500/25 text-xs font-bold text-purple-400/60 font-mono">
                 {formatPersianNumber(index + 1)}
               </div>
 
-              {/* Task Description column with inline edit — طول بیشتر برای متن‌های طولانی */}
-              <div className="flex-1 px-4 py-3 flex items-start gap-2 min-w-0">
-                <textarea
+              {/* Task — استاندارد تک‌خط، یک اندازه برای همه */}
+              <div className="flex-1 px-4 flex items-center gap-2 min-w-0">
+                <input
+                  type="text"
                   value={item.task}
                   onChange={(e) => handleTaskChange(item.id, e.target.value)}
-                  onInput={(e) => {
-                    const t = e.currentTarget;
-                    t.style.height = 'auto';
-                    t.style.height = `${t.scrollHeight}px`;
-                  }}
-                  ref={(el) => {
-                    if (el) {
-                      el.style.height = 'auto';
-                      el.style.height = `${el.scrollHeight}px`;
-                    }
-                  }}
                   placeholder={`ردیف ${formatPersianNumber(index + 1)} — برنامه را اینجا بنویس...`}
-                  rows={1}
-                  className={`w-full min-h-[48px] py-2 text-sm sm:text-[14px] text-purple-100 bg-transparent focus:outline-none transition placeholder-purple-400/30 font-medium leading-7 tracking-wide min-w-0 resize-none overflow-hidden whitespace-pre-wrap break-words ${
+                  className={`w-full h-10 text-sm text-purple-100 bg-transparent focus:outline-none transition placeholder-purple-400/30 font-medium leading-6 truncate min-w-0 ${
                     item.completed ? 'line-through text-purple-400/60 decoration-purple-400/70' : ''
                   }`}
                 />
