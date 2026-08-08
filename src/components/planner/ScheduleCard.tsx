@@ -106,14 +106,14 @@ const ScheduleCardComponent: React.FC<ScheduleCardProps> = ({
                 {formatPersianNumber(index + 1)}
               </div>
 
-              {/* Task Description column with inline edit — فضای بیشتر */}
-              <div className="flex-1 px-4 py-3 flex items-center gap-2">
+              {/* Task Description column with inline edit — فضای خیلی بیشتر برای نوشتن */}
+              <div className="flex-[3] px-5 py-4 flex items-center gap-2 min-w-0">
                 <input
                   type="text"
                   value={item.task}
                   onChange={(e) => handleTaskChange(item.id, e.target.value)}
-                  placeholder={`تسک و برنامه ردیف ${formatPersianNumber(index + 1)}...`}
-                  className={`w-full text-sm sm:text-[14px] text-purple-100 bg-transparent focus:outline-none transition placeholder-purple-400/25 font-medium leading-6 ${
+                  placeholder={`ردیف ${formatPersianNumber(index + 1)} — برنامه را اینجا بنویس...`}
+                  className={`w-full text-base text-purple-100 bg-transparent focus:outline-none transition placeholder-purple-400/30 font-medium leading-7 tracking-wide min-w-0 ${
                     item.completed ? 'line-through text-purple-400/60 decoration-purple-400/70' : ''
                   }`}
                 />
