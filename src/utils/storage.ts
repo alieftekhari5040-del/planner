@@ -24,7 +24,6 @@ export function createDefaultDayData(jy: number, jm: number, jd: number, dayName
       { id: 'p-2', text: '', completed: false },
       { id: 'p-3', text: '', completed: false },
       { id: 'p-4', text: '', completed: false },
-      { id: 'p-5', text: '', completed: false },
     ],
     goals: [
       { id: 'g-1', text: '', completed: false },
