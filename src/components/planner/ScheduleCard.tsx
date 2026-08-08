@@ -79,7 +79,7 @@ const ScheduleCardComponent: React.FC<ScheduleCardProps> = ({
           {schedule.map((item, index) => (
             <div
               key={item.id}
-              className={`flex items-stretch transition-colors group min-h-[64px] ${
+              className={`flex items-stretch transition-colors group min-h-[52px] ${
                 item.completed ? 'bg-purple-950/50' : 'hover:bg-purple-900/20'
               }`}
             >
