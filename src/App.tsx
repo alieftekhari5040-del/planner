@@ -83,8 +83,8 @@ export const App: React.FC = () => {
                 />
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 md:gap-6">
-                  {/* برنامه امروز — تمام عرض، جای بیشتر طولی و عرض متعادل */}
-                  <div className="lg:col-span-12">
+                  {/* برنامه امروز — عرض اصلیِ قشنگِ اول (7/12) ولی حالا تنها بالا، تمیز */}
+                  <div className="lg:col-span-7 lg:col-start-3">
                     <ScheduleCard
                       schedule={planner.plannerData.schedule}
                       onChange={(schedule) => planner.setPlannerData((prev) => ({ ...prev, schedule }))}
@@ -93,7 +93,7 @@ export const App: React.FC = () => {
                     />
                   </div>
 
-                  {/* اولویت‌ها و اهداف — برده شد پایین تا برنامه باز شود */}
+                  {/* اولویت‌ها و اهداف — برده شد پایین تا جا باز شود */}
                   <div className="lg:col-span-6">
                     <PrioritiesCard
                       priorities={planner.plannerData.priorities}
