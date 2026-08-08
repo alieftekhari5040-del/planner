@@ -231,7 +231,8 @@ button:disabled, input:disabled { cursor: not-allowed; opacity: .5; }
   pointer-events: none;
   z-index: 0;
 }
-.surface-card > * { position: relative; z-index: 1; }
+/* فرزندان مستقیم کارت بالای لایه ::before باشن */
+.surface-card > *:not(style) { position: relative; z-index: 1; }
 .surface-card:hover {
   border-color: rgba(139,92,246,.28) !important;
   box-shadow:

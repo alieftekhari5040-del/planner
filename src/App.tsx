@@ -110,11 +110,6 @@ export const App: React.FC = () => {
       }
     });
 
-    plannerData.routines?.forEach((r) => {
-      total++;
-      if (r.completed) completed++;
-    });
-
     plannerData.schedule?.forEach((s) => {
       if (s.task.trim()) {
         total++;

@@ -103,10 +103,12 @@ export const TemplatesModal: React.FC<TemplatesModalProps> = ({
   ];
 
   return (
-    <div className="modal-backdrop fixed inset-0 z-50 flex items-center justify-center p-4" role="presentation">
+    <div className="modal-backdrop fixed inset-0 z-50 flex items-center justify-center p-4" role="presentation"
+      onClick={onClose}>
       <div
         className="modal-card relative w-full max-w-2xl p-6 max-h-[90vh] overflow-y-auto"
         role="dialog"
+        onClick={(e) => e.stopPropagation()}
         aria-modal="true"
         aria-labelledby="templates-modal-title"
       >
@@ -114,7 +116,7 @@ export const TemplatesModal: React.FC<TemplatesModalProps> = ({
           type="button"
           onClick={onClose}
           aria-label="بستن قالب‌ها"
-          className="absolute top-4 left-4 p-2 rounded-xl bg-purple-950/60 hover:bg-purple-900 border border-purple-500/30 text-purple-300 hover:text-white transition cursor-pointer"
+          className="absolute top-4 left-4 p-2 rounded-xl bg-slate-900/70 hover:bg-violet-950/80 border border-violet-500/22 text-violet-300 hover:text-white transition cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>
@@ -123,7 +125,7 @@ export const TemplatesModal: React.FC<TemplatesModalProps> = ({
           <Sparkles className="w-5 h-5 text-amber-400" />
           <h3 id="templates-modal-title" className="text-xl font-bold text-white">قالب‌های آماده روزانه</h3>
         </div>
-        <p className="text-xs text-purple-300/70 mb-6">
+        <p className="text-xs text-violet-300/70 mb-6">
           یک قالب از پیش طراحی شده را انتخاب کنید تا سریعاً فیلدهای پلنر شما پر شود:
         </p>
 
@@ -131,18 +133,18 @@ export const TemplatesModal: React.FC<TemplatesModalProps> = ({
           {templates.map((tpl) => (
             <div
               key={tpl.id}
-              className="p-4 rounded-2xl border border-purple-500/30 bg-[#130b3a]/70 hover:border-purple-400/80 transition flex flex-col justify-between group"
+              className="p-4 rounded-2xl border border-violet-500/22 bg-[#130b3a]/70 hover:border-purple-400/80 transition flex flex-col justify-between group"
             >
               <div>
                 <div className="flex items-center gap-2.5 mb-2">
-                  <div className="p-2 rounded-xl bg-purple-950 border border-purple-500/30">
+                  <div className="p-2 rounded-xl bg-purple-950 border border-violet-500/22">
                     {tpl.icon}
                   </div>
-                  <h4 className="text-sm font-bold text-white group-hover:text-purple-200">
+                  <h4 className="text-sm font-bold text-white group-hover:text-slate-300">
                     {tpl.title}
                   </h4>
                 </div>
-                <p className="text-xs text-purple-300/70 line-clamp-2 mb-4 leading-relaxed">
+                <p className="text-xs text-violet-300/70 line-clamp-2 mb-4 leading-relaxed">
                   {tpl.desc}
                 </p>
               </div>
@@ -153,7 +155,7 @@ export const TemplatesModal: React.FC<TemplatesModalProps> = ({
                   onApplyTemplate(tpl.data);
                   onClose();
                 }}
-                className="w-full py-2 rounded-xl bg-purple-900/60 hover:bg-purple-700/80 border border-purple-500/30 text-xs font-bold text-white transition shadow-sm cursor-pointer"
+                className="w-full py-2 rounded-xl bg-violet-950/55 hover:bg-purple-700/80 border border-violet-500/22 text-xs font-bold text-white transition shadow-sm cursor-pointer"
               >
                 اعمال این قالب به امروز
               </button>

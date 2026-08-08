@@ -90,10 +90,12 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({
   ];
 
   return (
-    <div className="modal-backdrop fixed inset-0 z-50 flex items-center justify-center p-4" role="presentation">
+    <div className="modal-backdrop fixed inset-0 z-50 flex items-center justify-center p-4" role="presentation"
+      onClick={onClose}>
       <div
         className="modal-card relative w-full max-w-lg p-6 text-right"
         role="dialog"
+        onClick={(e) => e.stopPropagation()}
         aria-modal="true"
         aria-labelledby="calendar-modal-title"
       >
@@ -102,30 +104,30 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({
           type="button"
           onClick={onClose}
           aria-label="بستن تقویم"
-          className="absolute top-4 left-4 p-2 rounded-xl bg-purple-950/60 hover:bg-purple-900 border border-purple-500/30 text-purple-300 hover:text-white transition cursor-pointer"
+          className="absolute top-4 left-4 p-2 rounded-xl bg-slate-900/70 hover:bg-violet-950/80 border border-violet-500/22 text-violet-300 hover:text-white transition cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Header */}
         <div className="flex items-center gap-2.5 mb-2">
-          <div className="p-2 rounded-xl bg-purple-950 border border-purple-500/30 text-purple-300">
+          <div className="p-2 rounded-xl bg-purple-950 border border-violet-500/22 text-violet-300">
             <CalendarIcon className="w-5 h-5" />
           </div>
           <div>
             <h3 id="calendar-modal-title" className="text-xl font-bold text-white">تقویم شمسی و جابجایی بین روزها</h3>
-            <p className="text-xs text-purple-300/70">
+            <p className="text-xs text-violet-300/70">
               روی هر روز کلیک کنید تا اطلاعات ذخیره‌شده آن روز در لپ‌تاپ بارگذاری شود
             </p>
           </div>
         </div>
 
         {/* Month Selector Bar */}
-        <div className="flex items-center justify-between p-2 rounded-2xl bg-purple-950/60 border border-purple-500/30 my-5">
+        <div className="flex items-center justify-between p-2 rounded-2xl bg-slate-900/70 border border-violet-500/22 my-5">
           <button
             type="button"
             onClick={handlePrevMonth}
-            className="p-1.5 rounded-lg bg-purple-900/40 hover:bg-purple-800 border border-purple-500/20 text-purple-200 hover:text-white transition cursor-pointer flex items-center gap-1 text-xs"
+            className="p-1.5 rounded-lg bg-purple-900/40 hover:bg-purple-800 border border-purple-500/20 text-slate-300 hover:text-white transition cursor-pointer flex items-center gap-1 text-xs"
             title="ماه قبل"
           >
             <ChevronRight className="w-4 h-4" />
@@ -139,7 +141,7 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({
             <button
               type="button"
               onClick={handleGoTodayMonth}
-              className="px-2 py-0.5 rounded-md bg-purple-900/60 hover:bg-purple-700 text-[10px] text-purple-300 hover:text-white border border-purple-500/30 cursor-pointer"
+              className="px-2 py-0.5 rounded-md bg-violet-950/55 hover:bg-purple-700 text-[10px] text-violet-300 hover:text-white border border-violet-500/22 cursor-pointer"
             >
               برو به ماه جاری
             </button>
@@ -148,7 +150,7 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({
           <button
             type="button"
             onClick={handleNextMonth}
-            className="p-1.5 rounded-lg bg-purple-900/40 hover:bg-purple-800 border border-purple-500/20 text-purple-200 hover:text-white transition cursor-pointer flex items-center gap-1 text-xs"
+            className="p-1.5 rounded-lg bg-purple-900/40 hover:bg-purple-800 border border-purple-500/20 text-slate-300 hover:text-white transition cursor-pointer flex items-center gap-1 text-xs"
             title="ماه بعد"
           >
             <span>ماه بعد</span>
@@ -159,7 +161,7 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({
         {/* Month Days Grid */}
         <div className="grid grid-cols-7 gap-2 text-center mb-6">
           {PERSIAN_WEEKDAYS.map((day) => (
-            <span key={day} className="py-1 text-[10px] font-bold text-purple-400/80">
+            <span key={day} className="py-1 text-[10px] font-bold text-violet-400/80">
               {day.slice(0, 3)}
             </span>
           ))}
@@ -186,10 +188,10 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({
                 }}
                 className={`h-11 rounded-2xl flex flex-col items-center justify-center transition-all duration-200 relative group cursor-pointer ${
                   isCurrentSelected
-                    ? 'bg-gradient-to-tr from-purple-600 to-indigo-600 text-white font-black border border-purple-300 shadow-[0_0_15px_rgba(168,85,247,0.8)] scale-105'
+                    ? 'bg-gradient-to-tr from-purple-600 to-indigo-600 text-white font-black border border-violet-300 shadow-[0_0_15px_rgba(168,85,247,0.8)] scale-105'
                     : hasData
-                    ? 'bg-[#180e46] border border-purple-400/60 text-purple-100 hover:border-purple-300'
-                    : 'bg-purple-950/40 border border-purple-500/20 hover:border-purple-400/50 text-purple-300/80 hover:text-white'
+                    ? 'bg-[#180e46] border border-violet-400/45 text-purple-100 hover:border-violet-300'
+                    : 'bg-purple-950/40 border border-purple-500/20 hover:border-purple-400/50 text-violet-300/80 hover:text-white'
                 } ${isToday && !isCurrentSelected ? 'ring-2 ring-amber-400/80' : ''}`}
               >
                 <span className="text-xs sm:text-sm font-bold">{formatPersianNumber(dayNum)}</span>
@@ -204,7 +206,7 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({
         </div>
 
         {/* Legend */}
-        <div className="pt-3 border-t border-purple-500/20 flex flex-wrap items-center justify-between text-xs text-purple-300/70">
+        <div className="pt-3 border-t border-purple-500/20 flex flex-wrap items-center justify-between text-xs text-violet-300/70">
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,1)]" />
             <span>روزهای ثبت‌شده در حافظه مرورگر</span>
