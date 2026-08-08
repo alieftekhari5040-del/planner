@@ -340,10 +340,11 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="app-shell text-purple-100 selection:bg-purple-500 selection:text-white">
-      {/* Decorative background layers */}
-      <div className="fixed top-10 right-10 w-96 h-96 bg-purple-700/10 rounded-full blur-3xl pointer-events-none" aria-hidden="true" />
-      <div className="fixed bottom-10 left-10 w-96 h-96 bg-indigo-700/10 rounded-full blur-3xl pointer-events-none" aria-hidden="true" />
+    <div className="app-shell selection:bg-purple-500 selection:text-white">
+      {/* لایه‌های دکوراتیو */}
+      <div className="fixed top-0 right-0 w-[600px] h-[600px] bg-violet-700/8 rounded-full blur-[120px] pointer-events-none" aria-hidden="true" />
+      <div className="fixed bottom-0 left-0 w-[500px] h-[500px] bg-indigo-700/8 rounded-full blur-[100px] pointer-events-none" aria-hidden="true" />
+      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-violet-900/5 rounded-full blur-[140px] pointer-events-none" aria-hidden="true" />
 
       <div className="app-content">
         {/* Top Navigation Tabs */}
