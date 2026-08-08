@@ -106,8 +106,8 @@ const ScheduleCardComponent: React.FC<ScheduleCardProps> = ({
                 {formatPersianNumber(index + 1)}
               </div>
 
-              {/* Task Description column with inline edit — فضای خیلی بیشتر برای نوشتن، طولی هم باز می‌شود */}
-              <div className="flex-[3] px-5 py-3 flex items-start gap-2 min-w-0">
+              {/* Task Description column with inline edit — طول بیشتر برای متن‌های طولانی */}
+              <div className="flex-1 px-4 py-3 flex items-start gap-2 min-w-0">
                 <textarea
                   value={item.task}
                   onChange={(e) => handleTaskChange(item.id, e.target.value)}
@@ -124,7 +124,7 @@ const ScheduleCardComponent: React.FC<ScheduleCardProps> = ({
                   }}
                   placeholder={`ردیف ${formatPersianNumber(index + 1)} — برنامه را اینجا بنویس...`}
                   rows={1}
-                  className={`w-full min-h-[48px] py-2 text-base text-purple-100 bg-transparent focus:outline-none transition placeholder-purple-400/30 font-medium leading-7 tracking-wide min-w-0 resize-none overflow-hidden whitespace-pre-wrap break-words ${
+                  className={`w-full min-h-[48px] py-2 text-sm sm:text-[14px] text-purple-100 bg-transparent focus:outline-none transition placeholder-purple-400/30 font-medium leading-7 tracking-wide min-w-0 resize-none overflow-hidden whitespace-pre-wrap break-words ${
                     item.completed ? 'line-through text-purple-400/60 decoration-purple-400/70' : ''
                   }`}
                 />
