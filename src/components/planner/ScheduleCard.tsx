@@ -40,13 +40,13 @@ const ScheduleCardComponent: React.FC<ScheduleCardProps> = ({
   const totalCount = schedule.filter((s) => s.task.trim()).length;
 
   return (
-    <div className="surface-card w-full h-full p-4 md:p-5 relative overflow-hidden flex flex-col justify-between">
+    <div className="surface-card w-full min-h-[640px] lg:min-h-[720px] p-5 md:p-6 relative overflow-hidden flex flex-col justify-between">
       {/* Glow highlight */}
       <div className="absolute top-1/3 -right-20 w-48 h-48 bg-purple-600/10 blur-3xl pointer-events-none" />
 
-      <div>
+      <div className="flex-1 flex flex-col">
         {/* Header with Red/Coral Accent Bar */}
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-5">
           <div className="flex items-center gap-2">
             <span className="w-1.5 h-5 rounded-full bg-gradient-to-b from-rose-500 to-red-500 shadow-[0_0_8px_rgba(244,63,94,0.8)]" />
             <h2 className="text-base md:text-lg font-bold text-white tracking-wide">
@@ -74,17 +74,17 @@ const ScheduleCardComponent: React.FC<ScheduleCardProps> = ({
           </div>
         </div>
 
-        {/* Schedule Table Grid matching the 14 lined rows of the original poster */}
-        <div className="surface-inset rounded-2xl overflow-hidden divide-y divide-purple-500/25">
+        {/* Schedule Table Grid matching the 14 lined rows of the original poster — فضای بیشتر */}
+        <div className="surface-inset rounded-2xl overflow-hidden divide-y divide-purple-500/25 flex-1">
           {schedule.map((item, index) => (
             <div
               key={item.id}
-              className={`flex items-center transition-colors group ${
+              className={`flex items-center transition-colors group min-h-[48px] ${
                 item.completed ? 'bg-purple-950/50' : 'hover:bg-purple-900/20'
               }`}
             >
               {/* Checkbox column with Tactile Rounded Neon Rectangle */}
-              <div className="p-2.5 shrink-0 border-l border-purple-500/25 flex items-center justify-center">
+              <div className="p-3 shrink-0 border-l border-purple-500/25 flex items-center justify-center">
                 <button
                   type="button"
                   onClick={() => onItemToggle(item.id)}
@@ -102,18 +102,18 @@ const ScheduleCardComponent: React.FC<ScheduleCardProps> = ({
               </div>
 
               {/* Row index number (بدون ستون ساعت - ردیف‌های منظم) */}
-              <div className="w-9 shrink-0 text-center border-l border-purple-500/25 text-xs font-bold text-purple-400/60 font-mono">
+              <div className="w-10 shrink-0 text-center border-l border-purple-500/25 text-xs font-bold text-purple-400/60 font-mono">
                 {formatPersianNumber(index + 1)}
               </div>
 
-              {/* Task Description column with inline edit */}
-              <div className="flex-1 px-3 py-2 flex items-center gap-2">
+              {/* Task Description column with inline edit — فضای بیشتر */}
+              <div className="flex-1 px-4 py-3 flex items-center gap-2">
                 <input
                   type="text"
                   value={item.task}
                   onChange={(e) => handleTaskChange(item.id, e.target.value)}
                   placeholder={`تسک و برنامه ردیف ${formatPersianNumber(index + 1)}...`}
-                  className={`w-full text-xs sm:text-sm text-purple-100 bg-transparent focus:outline-none transition placeholder-purple-400/25 font-medium ${
+                  className={`w-full text-sm sm:text-[14px] text-purple-100 bg-transparent focus:outline-none transition placeholder-purple-400/25 font-medium leading-6 ${
                     item.completed ? 'line-through text-purple-400/60 decoration-purple-400/70' : ''
                   }`}
                 />
