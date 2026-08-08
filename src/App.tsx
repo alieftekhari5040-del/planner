@@ -83,7 +83,7 @@ export const App: React.FC = () => {
                 />
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 md:gap-6 items-stretch">
-                  <div className="lg:col-span-4 flex flex-col gap-5 md:gap-6 justify-between">
+                  <div className="lg:col-span-5 flex flex-col gap-5 md:gap-6 justify-between">
                     <PrioritiesCard
                       priorities={planner.plannerData.priorities}
                       onChange={(priorities) => planner.setPlannerData((prev) => ({ ...prev, priorities }))}
@@ -97,7 +97,7 @@ export const App: React.FC = () => {
                     />
                   </div>
 
-                  <div className="lg:col-span-8 flex flex-col">
+                  <div className="lg:col-span-7 flex flex-col">
                     <ScheduleCard
                       schedule={planner.plannerData.schedule}
                       onChange={(schedule) => planner.setPlannerData((prev) => ({ ...prev, schedule }))}
