@@ -390,24 +390,24 @@ button:disabled, input:disabled, select:disabled, textarea:disabled {
    چک‌باکس نئون سفارشی
 ═══════════════════════════════════════ */
 .neon-check {
-  width: 1.75rem; height: 1.75rem;
-  border-radius: .65rem;
+  width: 1.85rem; height: 1.85rem;
+  border-radius: .7rem;
   display: flex; align-items: center; justify-content: center;
-  border: 2px solid rgba(167,139,250,.45);
-  background: rgba(14,19,36,.8);
+  border: 2px solid rgba(167,139,250,.38);
+  background: rgba(14,19,38,.85);
   transition: all 220ms cubic-bezier(.22,.68,0,1.4);
   cursor: pointer; flex-shrink: 0;
 }
 .neon-check:hover {
-  border-color: rgba(167,139,250,.8);
-  box-shadow: 0 0 12px rgba(139,92,246,.35);
-  transform: scale(1.06);
+  border-color: rgba(167,139,250,.75);
+  box-shadow: 0 0 14px rgba(139,92,246,.32);
+  transform: scale(1.07);
 }
 .neon-check.checked {
   background: linear-gradient(135deg, #7c3aed, #6d28d9);
   border-color: #c4b5fd;
-  box-shadow: 0 0 18px rgba(139,92,246,.75), 0 0 6px rgba(196,181,253,.4);
-  transform: scale(1.08);
+  box-shadow: 0 0 20px rgba(139,92,246,.75), 0 0 7px rgba(196,181,253,.4);
+  transform: scale(1.09);
   animation: pulse-ring .6s ease;
 }
 
