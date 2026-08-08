@@ -39,10 +39,7 @@ export const TopNavTabs: React.FC<TopNavTabsProps> = ({ activeTab, onChangeTab }
           }`}
         >
           <Flame className="w-4 h-4 text-amber-400" />
-          <span>ردیاب حرفه‌ای عادت‌ها</span>
-          <span className="hidden sm:inline-block px-1.5 py-0.5 rounded-full bg-rose-500/80 text-[10px] text-white">
-            ویژه 🔥
-          </span>
+          <span>ردیاب عادت‌ها</span>
         </button>
 
         {/* Tab 3: Analytics & Insights */}

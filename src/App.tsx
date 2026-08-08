@@ -15,13 +15,14 @@ import {
   getJalaliDateForOffset,
   addDaysToJalali
 } from './utils/jalali';
+
 import {
   loadPlannerData,
   savePlannerData,
   createDefaultDayData
 } from './utils/storage';
 import { loadHabits, saveHabits } from './utils/habitStorage';
-import { getDemoPlannerData } from './utils/demoData';
+
 import { createPlannerBackup, parsePlannerBackup } from './utils/backup';
 import { playTickSound, playSuccessSound } from './utils/audio';
 
@@ -40,7 +41,6 @@ import { HabitTrackerPage } from './components/HabitTracker/HabitTrackerPage';
 import { AnalyticsPage } from './components/Analytics/AnalyticsPage';
 
 import { CalendarModal } from './components/CalendarModal';
-import { PomodoroModal } from './components/PomodoroModal';
 import { TemplatesModal } from './components/TemplatesModal';
 import { HistoryModal } from './components/HistoryModal';
 
@@ -72,7 +72,6 @@ export const App: React.FC = () => {
   // UI state
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-  const [isPomodoroOpen, setIsPomodoroOpen] = useState(false);
   const [isTemplatesOpen, setIsTemplatesOpen] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
@@ -268,14 +267,6 @@ export const App: React.FC = () => {
     }));
   };
 
-  const handleLoadDemoData = () => {
-    playSuccessSound(soundEnabled);
-    const demoDate = getJalaliDateForOffset(currentJy, currentJm, currentJd, 0);
-    const demoData = getDemoPlannerData(demoDate);
-    setPlannerData(demoData);
-    setActiveTab('planner');
-  };
-
   const handleResetDay = () => {
     if (window.confirm('آیا از پاکسازی اطلاعات این روز مطمئن هستید؟')) {
       playTickSound(soundEnabled);
@@ -358,13 +349,11 @@ export const App: React.FC = () => {
         <Header
           onPrint={handlePrint}
           onReset={handleResetDay}
-          onOpenPomodoro={() => setIsPomodoroOpen(true)}
           onOpenHistory={() => setIsHistoryOpen(true)}
           onOpenCalendarModal={() => setIsCalendarOpen(true)}
           onOpenTemplates={() => setIsTemplatesOpen(true)}
           onExportJSON={handleExportJSON}
           onImportJSON={handleImportJSON}
-          onLoadDemoData={handleLoadDemoData}
           soundEnabled={soundEnabled}
           onToggleSound={() => setSoundEnabled(!soundEnabled)}
           completionPercentage={completionStats.percent}
@@ -465,12 +454,6 @@ export const App: React.FC = () => {
         currentJm={currentJm}
         currentJd={currentJd}
         onSelectDate={handleSelectFromCalendar}
-      />
-
-      <PomodoroModal
-        isOpen={isPomodoroOpen}
-        onClose={() => setIsPomodoroOpen(false)}
-        soundEnabled={soundEnabled}
       />
 
       <TemplatesModal
