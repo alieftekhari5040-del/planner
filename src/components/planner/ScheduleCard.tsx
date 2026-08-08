@@ -79,7 +79,7 @@ const ScheduleCardComponent: React.FC<ScheduleCardProps> = ({
           {schedule.map((item, index) => (
             <div
               key={item.id}
-              className={`flex items-center transition-colors group h-14 ${
+              className={`flex items-center transition-colors group h-16 ${
                 item.completed ? 'bg-purple-950/50' : 'hover:bg-purple-900/20'
               }`}
             >
@@ -113,7 +113,7 @@ const ScheduleCardComponent: React.FC<ScheduleCardProps> = ({
                   value={item.task}
                   onChange={(e) => handleTaskChange(item.id, e.target.value)}
                   placeholder={`ردیف ${formatPersianNumber(index + 1)} — برنامه را اینجا بنویس...`}
-                  className={`w-full h-10 text-sm text-purple-100 bg-transparent focus:outline-none transition placeholder-purple-400/30 font-medium leading-6 truncate min-w-0 ${
+                  className={`w-full h-12 text-base text-purple-100 bg-transparent focus:outline-none transition placeholder-purple-400/30 font-medium leading-6 truncate min-w-0 ${
                     item.completed ? 'line-through text-purple-400/60 decoration-purple-400/70' : ''
                   }`}
                 />
