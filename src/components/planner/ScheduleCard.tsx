@@ -74,8 +74,8 @@ const ScheduleCardComponent: React.FC<ScheduleCardProps> = ({
           </div>
         </div>
 
-        {/* Schedule Table Grid matching the 14 lined rows of the original poster — فضای بیشتر */}
-        <div className="surface-inset rounded-2xl overflow-hidden divide-y divide-purple-500/25 flex-1">
+        {/* Schedule Table Grid — تمام عرض ولی با عرض متعادل و تمیز (نه زشتِ کشیده) */}
+        <div className="surface-inset rounded-2xl overflow-hidden divide-y divide-purple-500/25 flex-1 max-w-4xl mx-auto w-full">
           {schedule.map((item, index) => (
             <div
               key={item.id}
