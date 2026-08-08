@@ -2,8 +2,7 @@ import React, { useRef } from 'react';
 import { formatPersianNumber } from '../utils/jalali';
 import {
   Printer, RotateCcw, Volume2, VolumeX,
-  Calendar, FileJson, CalendarDays, History,
-  Upload, TrendingUp
+  Calendar, FileJson, CalendarDays, History, Upload,
 } from 'lucide-react';
 
 interface HeaderProps {
@@ -27,130 +26,100 @@ export const Header: React.FC<HeaderProps> = ({
   const importRef = useRef<HTMLInputElement>(null);
   const pct = Math.round(completionPercentage);
   const isDone = pct === 100;
-
-  const strokeColor = isDone ? '#34d399' : '#a78bfa';
-  const circumference = 2 * Math.PI * 15.9;
-  const dashOffset = circumference - (completionPercentage / 100) * circumference;
+  const C = 2 * Math.PI * 15.9;
+  const dash = C - (completionPercentage / 100) * C;
 
   return (
     <header className="w-full mb-5">
-
       {/* ── تولبار ── */}
-      <div className="no-print app-toolbar flex flex-wrap items-center justify-between gap-3 px-4 py-2.5 mb-5">
-
-        {/* progress chip */}
-        <div className="progress-chip flex items-center gap-3 px-3.5 py-2">
-          <div className="relative w-10 h-10 shrink-0">
+      <div className="no-print app-toolbar mb-5">
+        {/* progress */}
+        <div className="progress-chip">
+          <div className="relative w-9 h-9 shrink-0">
             <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
-              <circle cx="18" cy="18" r="15.9" fill="none"
-                stroke="rgba(109,40,217,.18)" strokeWidth="2.8" />
-              <circle cx="18" cy="18" r="15.9" fill="none"
-                stroke={strokeColor} strokeWidth="2.8" strokeLinecap="round"
-                strokeDasharray={`${circumference}`}
-                strokeDashoffset={dashOffset}
-                className="transition-all duration-700 ease-out" />
+              <circle cx="18" cy="18" r="15.9" fill="none" strokeWidth="2.5"
+                stroke="rgba(139,92,246,.15)" />
+              <circle cx="18" cy="18" r="15.9" fill="none" strokeWidth="2.5"
+                strokeLinecap="round"
+                stroke={isDone ? '#34d399' : '#8b5cf6'}
+                strokeDasharray={C}
+                strokeDashoffset={dash}
+                className="transition-all duration-700" />
             </svg>
-            <span className="absolute inset-0 flex items-center justify-center text-[9px] font-black leading-none"
-              style={{ color: strokeColor }}>
+            <span className="absolute inset-0 flex items-center justify-center text-[9px] font-black"
+              style={{ color: isDone ? '#34d399' : '#a78bfa' }}>
               {formatPersianNumber(pct)}٪
             </span>
           </div>
-          <div className="text-right leading-tight">
-            <div className="flex items-center gap-1.5">
-              <TrendingUp className="w-3 h-3 text-violet-400" />
-              <span className="text-xs font-bold text-slate-200">پیشرفت روز</span>
-            </div>
-            <div className="text-[11px] mt-0.5 font-medium"
-              style={{ color: isDone ? '#34d399' : '#6b7a99' }}>
-              {isDone ? '🎉 روز کامل شد!' : `${formatPersianNumber(pct)}٪ انجام شده`}
-            </div>
+          <div className="leading-tight">
+            <p className="text-xs font-bold text-slate-300">پیشرفت روز</p>
+            <p className="text-[11px] mt-0.5" style={{ color: isDone ? '#34d399' : 'var(--c-muted)' }}>
+              {isDone ? '🎉 روز کامل!' : `${formatPersianNumber(pct)}٪ انجام شده`}
+            </p>
           </div>
         </div>
 
         {/* دکمه‌ها */}
         <div className="flex flex-wrap items-center gap-1.5">
-
-          <button onClick={onOpenCalendarModal} type="button" className="btn btn-ghost" title="تقویم ماهانه">
-            <CalendarDays className="w-3.5 h-3.5 text-violet-300" /><span>تقویم</span>
+          <button onClick={onOpenCalendarModal} type="button" className="btn btn-ghost text-xs">
+            <CalendarDays className="w-3.5 h-3.5" /> تقویم
+          </button>
+          <button onClick={onOpenTemplates} type="button" className="btn btn-ghost text-xs">
+            <Calendar className="w-3.5 h-3.5 text-amber-400" /> قالب‌ها
+          </button>
+          <button onClick={onOpenHistory} type="button" className="btn btn-ghost text-xs">
+            <History className="w-3.5 h-3.5 text-sky-400" /> تاریخچه
           </button>
 
-          <button onClick={onOpenTemplates} type="button" className="btn btn-ghost" title="قالب‌های آماده">
-            <Calendar className="w-3.5 h-3.5 text-amber-400" /><span>قالب‌ها</span>
+          <div className="w-px h-4 bg-white/10 mx-0.5" />
+
+          <button onClick={onExportJSON} type="button" className="btn btn-ghost text-xs">
+            <FileJson className="w-3.5 h-3.5 text-emerald-400" /> خروجی
+          </button>
+          <input ref={importRef} type="file" accept=".json" className="sr-only"
+            onChange={(e) => { const f = e.target.files?.[0]; if (f) onImportJSON(f); e.target.value = ''; }} />
+          <button onClick={() => importRef.current?.click()} type="button" className="btn btn-ghost text-xs">
+            <Upload className="w-3.5 h-3.5 text-cyan-400" /> بازیابی
           </button>
 
-          <button onClick={onOpenHistory} type="button" className="btn btn-ghost" title="تاریخچه">
-            <History className="w-3.5 h-3.5 text-sky-400" /><span>تاریخچه</span>
-          </button>
+          <div className="w-px h-4 bg-white/10 mx-0.5" />
 
-          <div className="w-px h-5 bg-slate-700/55 mx-0.5" />
-
-          <button onClick={onExportJSON} type="button" className="btn btn-ghost" title="خروجی JSON">
-            <FileJson className="w-3.5 h-3.5 text-emerald-400" /><span>خروجی</span>
-          </button>
-
-          <input ref={importRef} type="file" accept="application/json,.json"
-            className="sr-only" onChange={(e) => { const f = e.target.files?.[0]; if (f) onImportJSON(f); e.target.value = ''; }}
-            aria-label="انتخاب فایل پشتیبان" />
-          <button onClick={() => importRef.current?.click()} type="button" className="btn btn-ghost" title="بازیابی">
-            <Upload className="w-3.5 h-3.5 text-cyan-400" /><span>بازیابی</span>
-          </button>
-
-          <div className="w-px h-5 bg-slate-700/55 mx-0.5" />
-
-          <button onClick={onToggleSound} type="button"
-            className={`p-2 rounded-lg border transition-all cursor-pointer ${soundEnabled
-              ? 'bg-violet-950/40 border-violet-500/28 text-violet-300 hover:text-white hover:border-violet-400/50'
-              : 'bg-slate-900/35 border-slate-700/35 text-slate-500 hover:text-slate-300'}`}>
+          <button onClick={onToggleSound} type="button" aria-label="صدا"
+            className={`p-2 rounded-lg border cursor-pointer transition ${
+              soundEnabled
+                ? 'border-violet-500/25 text-violet-400 hover:text-white bg-violet-950/30'
+                : 'border-white/08 text-slate-600 hover:text-slate-400 bg-transparent'
+            }`}>
             {soundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
           </button>
-
-          <button onClick={onPrint} type="button" className="btn btn-primary" title="چاپ / PDF">
-            <Printer className="w-3.5 h-3.5" /><span>چاپ</span>
+          <button onClick={onPrint} type="button" className="btn btn-primary text-xs">
+            <Printer className="w-3.5 h-3.5" /> چاپ
           </button>
-
-          <button onClick={onReset} type="button"
-            className="p-2 rounded-lg bg-transparent hover:bg-red-950/35 border border-slate-700/28 hover:border-red-500/38 text-slate-500 hover:text-red-400 transition-all cursor-pointer"
-            title="پاکسازی این روز">
-            <RotateCcw className="w-4 h-4" />
+          <button onClick={onReset} type="button" className="btn btn-danger text-xs" title="پاکسازی روز">
+            <RotateCcw className="w-3.5 h-3.5" />
           </button>
         </div>
       </div>
 
       {/* ── برند ── */}
-      <div className="app-brand px-1 pt-1 pb-2">
-        <div className="text-right">
-          <h1 className="text-4xl md:text-5xl font-black font-sans tracking-tight">
-            برنامه‌ی روزانه
-          </h1>
-          <p className="mt-1.5 text-sm md:text-base font-medium text-slate-500">
-            هر روز یک قدم جلوتر به سوی اهدافت
-          </p>
+      <div className="app-brand">
+        <div>
+          <h1>برنامه‌ی روزانه</h1>
+          <p className="text-sm text-slate-500 mt-1">هر روز یک قدم جلوتر به سوی اهدافت</p>
         </div>
-
-        {/* لوگو */}
         <div className="flex items-center gap-3">
           <div className="hidden sm:block text-right">
-            <div className="text-sm font-black text-slate-300 leading-tight">برنامه‌ریز صعود</div>
-            <div className="text-[11px] font-medium text-slate-600">برنامه‌ریزی روزانه</div>
+            <p className="text-sm font-black text-slate-300">برنامه‌ریز صعود</p>
+            <p className="text-xs text-slate-600">برنامه‌ریزی روزانه</p>
           </div>
-          {/* bar chart لوگو */}
-          <div className="flex items-end gap-[4px] pb-0.5">
-            {([
-              { h: 20, opacity: '.6'  },
-              { h: 32, opacity: '.85' },
-              { h: 26, opacity: '.7'  },
-              { h: 38, opacity: '1'   },
-              { h: 22, opacity: '.65' },
-            ]).map((bar, i) => (
-              <div key={i}
+          <div className="flex items-end gap-[3px]">
+            {[16, 24, 20, 30, 18].map((h, i) => (
+              <div key={i} className="w-[6px] rounded-sm"
                 style={{
-                  height: `${bar.h}px`,
-                  opacity: bar.opacity,
-                  background: 'linear-gradient(to top, #7c3aed, #a78bfa)',
-                  boxShadow: `0 0 8px rgba(139,92,246,${bar.opacity})`,
-                }}
-                className="w-[7px] rounded-sm"
-              />
+                  height: h, opacity: .5 + i * .1,
+                  background: 'linear-gradient(to top,#6d28d9,#a78bfa)',
+                  boxShadow: '0 0 6px rgba(139,92,246,.4)',
+                }} />
             ))}
           </div>
         </div>

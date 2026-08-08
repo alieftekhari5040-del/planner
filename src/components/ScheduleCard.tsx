@@ -1,131 +1,91 @@
 import React from 'react';
 import type { ScheduleItem } from '../types/planner';
-import { Check, Plus, Trash2, ClipboardList, Sparkles } from 'lucide-react';
+import { Check, Plus, Trash2, LayoutList, Sparkles } from 'lucide-react';
 import { formatPersianNumber } from '../utils/jalali';
 
-interface ScheduleCardProps {
+interface Props {
   schedule: ScheduleItem[];
-  onChange: (schedule: ScheduleItem[]) => void;
+  onChange: (s: ScheduleItem[]) => void;
   onItemToggle: (id: string) => void;
   onApplyPresetTasks?: () => void;
 }
 
-export const ScheduleCard: React.FC<ScheduleCardProps> = ({
-  schedule, onChange, onItemToggle, onApplyPresetTasks,
-}) => {
-  const handleTaskChange = (id: string, task: string) =>
+export const ScheduleCard: React.FC<Props> = ({ schedule, onChange, onItemToggle, onApplyPresetTasks }) => {
+  const set = (id: string, task: string) =>
     onChange(schedule.map((s) => (s.id === id ? { ...s, task } : s)));
-
-  const handleAdd = () =>
+  const add = () =>
     onChange([...schedule, { id: `s-${Date.now()}`, task: '', completed: false }]);
-
-  const handleRemove = (id: string) => {
-    if (schedule.length <= 1) return;
-    onChange(schedule.filter((s) => s.id !== id));
-  };
+  const del = (id: string) =>
+    schedule.length > 1 && onChange(schedule.filter((s) => s.id !== id));
 
   const done  = schedule.filter((s) => s.completed && s.task.trim()).length;
   const total = schedule.filter((s) => s.task.trim()).length;
+  const pct   = total > 0 ? Math.round((done / total) * 100) : 0;
 
   return (
-    <div className="surface-card w-full p-4 md:p-5 relative flex flex-col">
-      {/* glow */}
-      <div className="absolute top-1/3 -left-16 w-52 h-52 bg-emerald-600/8 blur-3xl pointer-events-none" />
-
-      {/* هدر */}
-      <div className="flex items-center justify-between mb-5">
-        <div className="flex items-center gap-2">
-          <span className="card-accent-bar accent-emerald" />
-          <ClipboardList className="w-4 h-4 text-emerald-400" />
-          <h2 className="text-base md:text-lg font-bold text-white">برنامه‌ی امروز</h2>
+    <div className="card flex flex-col">
+      {/* head */}
+      <div className="card-head">
+        <div className="card-head-left">
+          <span className="accent accent-e" />
+          <LayoutList className="w-3.5 h-3.5 text-emerald-400" />
+          <span className="card-title">برنامه‌ی امروز</span>
         </div>
         <div className="flex items-center gap-2">
           {total > 0 && (
-            <span className="badge badge-emerald">
-              {formatPersianNumber(done)}/{formatPersianNumber(total)} تسک
-            </span>
+            <span className="badge badge-e">{formatPersianNumber(done)}/{formatPersianNumber(total)} تسک</span>
           )}
           {onApplyPresetTasks && (
-            <button
-              type="button"
-              onClick={onApplyPresetTasks}
-              className="no-print hidden sm:flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-lg transition cursor-pointer"
-              style={{ background: 'rgba(217,119,6,.14)', border: '1px solid rgba(252,211,77,.22)', color: '#fcd34d' }}
-              title="برنامه پیشنهادی"
-            >
-              <Sparkles className="w-3 h-3" />
-              <span>پیشنهادی</span>
+            <button type="button" onClick={onApplyPresetTasks}
+              className="no-print btn btn-add text-xs hidden sm:flex">
+              <Sparkles className="w-3 h-3 text-amber-400" /> پیشنهادی
             </button>
           )}
         </div>
       </div>
 
-      {/* ردیف‌ها */}
-      <div className="flex-1 flex flex-col gap-2.5">
-        {schedule.map((item, idx) => (
-          <div
-            key={item.id}
-            className={`group flex items-center gap-3 px-3 py-3 rounded-xl border transition-all duration-200 ${
-              item.completed
-                ? 'bg-emerald-950/20 border-emerald-500/20 shadow-[inset_0_1px_0_rgba(52,211,153,.06)]'
-                : 'bg-slate-900/30 border-slate-700/25 hover:bg-slate-800/45 hover:border-slate-600/40'
-            }`}
-          >
-            {/* چک‌باکس نئون — همون مدل PrioritiesCard */}
-            <button
-              type="button"
-              onClick={() => onItemToggle(item.id)}
-              aria-pressed={item.completed}
-              className={`neon-check shrink-0 ${item.completed ? 'checked' : ''}`}
-              style={item.completed ? {
-                background: 'linear-gradient(135deg,#059669,#047857)',
-                borderColor: '#6ee7b7',
-                boxShadow: '0 0 18px rgba(5,150,105,.7), 0 0 6px rgba(110,231,183,.35)'
-              } : undefined}
-            >
-              <Check className={`w-4 h-4 stroke-[3] text-white transition-all duration-200 ${item.completed ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`} />
+      {/* progress bar */}
+      {total > 0 && (
+        <div className="h-[2px] bg-slate-800/80 mx-0">
+          <div className="h-full bg-emerald-500 transition-all duration-500"
+            style={{ width: `${pct}%` }} />
+        </div>
+      )}
+
+      {/* body — لیست تسک‌ها */}
+      <div className="flex-1">
+        {schedule.map((item, i) => (
+          <div key={item.id} className={`task-row group ${item.completed ? 'done' : ''}`}>
+            {/* شماره */}
+            <span className="num shrink-0">{formatPersianNumber(i + 1)}</span>
+
+            {/* چک‌باکس */}
+            <button type="button" onClick={() => onItemToggle(item.id)} aria-pressed={item.completed}
+              className={`cb shrink-0 ${item.completed ? 'on-emerald' : ''}`}>
+              <Check className={`w-3.5 h-3.5 stroke-[3] text-white ${item.completed ? 'opacity-100' : 'opacity-0'}`} />
             </button>
 
-            {/* شماره ردیف */}
-            <span className={`text-xs font-bold shrink-0 w-5 text-center tabular-nums ${item.completed ? 'text-slate-600' : 'text-slate-500'}`}>
-              {formatPersianNumber(idx + 1)}
-            </span>
-
-            {/* متن تسک */}
+            {/* متن */}
             <input
-              type="text"
-              value={item.task}
-              onChange={(e) => handleTaskChange(item.id, e.target.value)}
-              placeholder={`تسک ${formatPersianNumber(idx + 1)}...`}
-              className={`flex-1 text-sm bg-transparent focus:outline-none font-medium transition-all duration-200 ${
-                item.completed
-                  ? 'line-through text-slate-500 decoration-emerald-500/50 decoration-2 placeholder-slate-700'
-                  : 'text-slate-200 placeholder-slate-700 focus:placeholder-slate-600'
-              }`}
+              type="text" value={item.task}
+              onChange={(e) => set(item.id, e.target.value)}
+              placeholder={`تسک ${formatPersianNumber(i + 1)}...`}
+              className={`task-field ${item.completed ? 'done' : ''}`}
             />
 
-            {/* دکمه حذف */}
-            <button
-              type="button"
-              onClick={() => handleRemove(item.id)}
-              className="no-print shrink-0 opacity-0 group-hover:opacity-100 p-1 text-slate-600 hover:text-rose-400 transition-all cursor-pointer rounded-md hover:bg-rose-950/30"
-              aria-label="حذف"
-            >
+            {/* حذف */}
+            <button type="button" onClick={() => del(item.id)}
+              className="icon-btn no-print opacity-0 group-hover:opacity-100 shrink-0">
               <Trash2 className="w-3.5 h-3.5" />
             </button>
           </div>
         ))}
       </div>
 
-      {/* افزودن ردیف */}
-      <div className="no-print mt-4 pt-3 divider">
-        <button
-          type="button"
-          onClick={handleAdd}
-          className="btn btn-ghost mt-3 text-xs"
-        >
-          <Plus className="w-3.5 h-3.5" />
-          <span>افزودن تسک</span>
+      {/* foot */}
+      <div className="card-foot no-print">
+        <button type="button" onClick={add} className="btn btn-add text-xs">
+          <Plus className="w-3.5 h-3.5" /> افزودن تسک
         </button>
       </div>
     </div>

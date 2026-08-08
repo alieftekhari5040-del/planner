@@ -2,74 +2,59 @@ import React from 'react';
 import { Lightbulb, Plus, Trash2 } from 'lucide-react';
 import { formatPersianNumber } from '../utils/jalali';
 
-interface LessonsCardProps {
+interface Props {
   lessons: string[];
-  onChange: (lessons: string[]) => void;
+  onChange: (l: string[]) => void;
 }
 
-export const LessonsCard: React.FC<LessonsCardProps> = ({ lessons, onChange }) => {
-  const handleChange = (idx: number, val: string) => {
-    const u = [...lessons]; u[idx] = val; onChange(u);
-  };
-  const handleAdd    = () => onChange([...lessons, '']);
-  const handleRemove = (idx: number) => {
-    if (lessons.length <= 1) return;
-    onChange(lessons.filter((_, i) => i !== idx));
-  };
+const HINTS = [
+  'مهم‌ترین چیزی که امروز یاد گرفتم...',
+  'چه کاری را فردا بهتر انجام می‌دهم؟',
+  'یک لحظه مثبت یا شکرگزاری از امروز...',
+  'ایده‌ای که می‌خواهم دنبال کنم...',
+];
 
-  const placeholders = [
-    'مهم‌ترین چیزی که امروز یاد گرفتم...',
-    'چه کاری رو فردا بهتر انجام می‌دم؟',
-    'یک نکته مثبت یا شکرگزاری از امروز...',
-    'ایده‌ای که می‌خوام دنبال کنم...',
-  ];
+export const LessonsCard: React.FC<Props> = ({ lessons, onChange }) => {
+  const set = (i: number, v: string) => { const u = [...lessons]; u[i] = v; onChange(u); };
+  const add = () => onChange([...lessons, '']);
+  const del = (i: number) => lessons.length > 1 && onChange(lessons.filter((_, j) => j !== i));
 
   return (
-    <div className="surface-card w-full p-4 md:p-5 relative">
-      {/* glow */}
-      <div className="absolute -bottom-8 left-1/3 w-64 h-24 bg-amber-600/8 blur-3xl pointer-events-none" />
-
-      {/* هدر */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <span className="card-accent-bar accent-amber" />
-          <Lightbulb className="w-4 h-4 text-amber-400" />
-          <h2 className="text-base md:text-lg font-bold text-white">درس‌های امروز</h2>
+    <div className="card flex flex-col">
+      {/* head */}
+      <div className="card-head">
+        <div className="card-head-left">
+          <span className="accent accent-a" />
+          <Lightbulb className="w-3.5 h-3.5 text-amber-400" />
+          <span className="card-title">درس‌های امروز</span>
         </div>
-        <span className="badge badge-amber">
-          <span>تأمل شبانه</span>
-        </span>
+        <span className="text-xs text-slate-600">تأمل شبانه</span>
       </div>
 
-      {/* سطرها */}
-      <div className="surface-inset p-3.5 rounded-xl space-y-3">
-        {lessons.map((line, idx) => (
-          <div key={idx} className="flex items-center gap-2.5 group">
-            <span className="text-[11px] font-bold text-slate-600 w-4 text-center shrink-0">
-              {formatPersianNumber(idx + 1)}
-            </span>
+      {/* body */}
+      <div className="card-body flex-1 space-y-0.5 py-2">
+        {lessons.map((line, i) => (
+          <div key={i} className="row-item group">
+            <span className="num">{formatPersianNumber(i + 1)}</span>
             <input
-              type="text"
-              value={line}
-              onChange={(e) => handleChange(idx, e.target.value)}
-              placeholder={placeholders[idx] ?? 'یک درس یا ایده...'}
-              className="flex-1 py-1 text-sm text-slate-200 bg-transparent border-b border-slate-600/30 focus:border-amber-400/65 focus:outline-none transition placeholder-slate-700 font-medium"
+              type="text" value={line}
+              onChange={(e) => set(i, e.target.value)}
+              placeholder={HINTS[i] ?? 'درس یا ایده...'}
+              className="field"
+              style={{ borderBottomColor: 'rgba(251,191,36,.2)' }}
             />
-            <button type="button" onClick={() => handleRemove(idx)}
-              className="no-print opacity-0 group-hover:opacity-100 p-1 text-slate-600 hover:text-rose-400 transition cursor-pointer"
-              aria-label="حذف">
+            <button type="button" onClick={() => del(i)}
+              className="icon-btn no-print opacity-0 group-hover:opacity-100">
               <Trash2 className="w-3.5 h-3.5" />
             </button>
           </div>
         ))}
       </div>
 
-      <div className="no-print mt-3.5 pt-3 divider">
-        <button type="button" onClick={handleAdd}
-          className="btn mt-3 text-xs"
-          style={{ background: 'rgba(217,119,6,.12)', borderColor: 'rgba(252,211,77,.22)', color: '#fcd34d' }}>
-          <Plus className="w-3.5 h-3.5" />
-          <span>افزودن درس جدید</span>
+      {/* foot */}
+      <div className="card-foot no-print">
+        <button type="button" onClick={add} className="btn btn-add text-xs">
+          <Plus className="w-3.5 h-3.5" /> افزودن درس
         </button>
       </div>
     </div>
