@@ -1,247 +1,126 @@
 import React, { useRef } from 'react';
 import { formatPersianNumber } from '../utils/jalali';
 import {
-  Printer,
-  Sparkles,
-  RotateCcw,
-  Volume2,
-  VolumeX,
-  Calendar,
-  Timer,
-  FileJson,
-  CalendarDays,
-  Upload
+  Printer, RotateCcw, Volume2, VolumeX,
+  Calendar, FileJson, CalendarDays, History, Upload,
 } from 'lucide-react';
 
 interface HeaderProps {
   onPrint: () => void;
   onReset: () => void;
-  onOpenPomodoro: () => void;
   onOpenHistory: () => void;
   onOpenCalendarModal: () => void;
   onOpenTemplates: () => void;
   onExportJSON: () => void;
   onImportJSON: (file: File) => void;
-  onLoadDemoData: () => void;
   soundEnabled: boolean;
   onToggleSound: () => void;
   completionPercentage: number;
 }
 
 export const Header: React.FC<HeaderProps> = ({
-  onPrint,
-  onReset,
-  onOpenPomodoro,
-  onOpenHistory,
-  onOpenCalendarModal,
-  onOpenTemplates,
-  onExportJSON,
-  onImportJSON,
-  onLoadDemoData,
-  soundEnabled,
-  onToggleSound,
-  completionPercentage,
+  onPrint, onReset, onOpenHistory, onOpenCalendarModal,
+  onOpenTemplates, onExportJSON, onImportJSON,
+  soundEnabled, onToggleSound, completionPercentage,
 }) => {
-  const importInputRef = useRef<HTMLInputElement>(null);
-
-  const handleImportChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) onImportJSON(file);
-    event.target.value = '';
-  };
+  const importRef = useRef<HTMLInputElement>(null);
+  const pct = Math.round(completionPercentage);
+  const isDone = pct === 100;
+  const C = 2 * Math.PI * 15.9;
+  const dash = C - (completionPercentage / 100) * C;
 
   return (
-    <header className="w-full mb-6">
-      {/* Interactive Controls Bar (Top Toolbar) */}
-      <div className="no-print app-toolbar flex flex-wrap items-center justify-between gap-3 p-3.5 mb-6">
-        <div className="flex items-center gap-2 flex-wrap">
-          {/* Quick Info & Completion Progress */}
-          <div className="progress-chip flex items-center gap-3 px-3 py-1.5 rounded-xl">
-            <div className="relative w-8 h-8 flex items-center justify-center">
-              <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-                <path
-                  className="text-purple-950"
-                  strokeWidth="3.5"
-                  stroke="currentColor"
-                  fill="none"
-                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                />
-                <path
-                  className="text-purple-400 transition-all duration-500"
-                  strokeDasharray={`${completionPercentage}, 100`}
-                  strokeWidth="3.5"
-                  strokeLinecap="round"
-                  stroke="currentColor"
-                  fill="none"
-                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                />
-              </svg>
-              <span className="absolute text-[10px] font-bold text-purple-200">
-                {formatPersianNumber(Math.round(completionPercentage))}٪
-              </span>
-            </div>
-            <div className="text-right">
-              <div className="text-xs font-semibold text-purple-200">پیشرفت روزانه</div>
-              <div className="text-[11px] text-purple-400/80">
-                {completionPercentage === 100
-                  ? '🎉 تکمیل کامل روز!'
-                  : `${formatPersianNumber(Math.round(completionPercentage))} درصد انجام شده`}
-              </div>
-            </div>
+    <header className="w-full mb-5">
+      {/* ── تولبار ── */}
+      <div className="no-print app-toolbar mb-5">
+        {/* progress */}
+        <div className="progress-chip">
+          <div className="relative w-9 h-9 shrink-0">
+            <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
+              <circle cx="18" cy="18" r="15.9" fill="none" strokeWidth="2.5"
+                stroke="rgba(139,92,246,.15)" />
+              <circle cx="18" cy="18" r="15.9" fill="none" strokeWidth="2.5"
+                strokeLinecap="round"
+                stroke={isDone ? '#34d399' : '#8b5cf6'}
+                strokeDasharray={C}
+                strokeDashoffset={dash}
+                className="transition-all duration-700" />
+            </svg>
+            <span className="absolute inset-0 flex items-center justify-center text-[9px] font-black"
+              style={{ color: isDone ? '#34d399' : '#a78bfa' }}>
+              {formatPersianNumber(pct)}٪
+            </span>
           </div>
-
-          {/* Pomodoro Timer button */}
-          <button
-            type="button"
-            onClick={onOpenPomodoro}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-rose-900/60 to-purple-900/60 hover:from-rose-800/80 hover:to-purple-800/80 border border-rose-500/30 text-rose-200 hover:text-white text-xs font-medium transition shadow-sm hover:shadow-rose-900/30 cursor-pointer"
-            title="تایمر تمرکز پومودورو"
-          >
-            <Timer className="w-4 h-4 text-rose-400" />
-            <span>تایمر تمرکز</span>
-          </button>
+          <div className="leading-tight">
+            <p className="text-xs font-bold text-slate-300">پیشرفت روز</p>
+            <p className="text-[11px] mt-0.5" style={{ color: isDone ? '#34d399' : 'var(--c-muted)' }}>
+              {isDone ? '🎉 روز کامل!' : `${formatPersianNumber(pct)}٪ انجام شده`}
+            </p>
+          </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex flex-wrap items-center gap-2">
-          {/* Quick Demo Mode Trigger Button */}
-          <button
-            type="button"
-            onClick={onLoadDemoData}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-600/70 to-orange-600/70 hover:from-amber-500 hover:to-orange-500 border border-amber-400/40 text-white text-xs font-bold transition shadow-sm cursor-pointer"
-            title="بارگذاری نمونه کامل آزمایشی"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-amber-200" />
-            <span>⚡ نمونه آزمایشی</span>
+        {/* دکمه‌ها */}
+        <div className="flex flex-wrap items-center gap-1.5">
+          <button onClick={onOpenCalendarModal} type="button" className="btn btn-ghost text-xs">
+            <CalendarDays className="w-3.5 h-3.5" /> تقویم
+          </button>
+          <button onClick={onOpenTemplates} type="button" className="btn btn-ghost text-xs">
+            <Calendar className="w-3.5 h-3.5 text-amber-400" /> قالب‌ها
+          </button>
+          <button onClick={onOpenHistory} type="button" className="btn btn-ghost text-xs">
+            <History className="w-3.5 h-3.5 text-sky-400" /> تاریخچه
           </button>
 
-          {/* Month Calendar Drawer & Day Navigator */}
-          <button
-            type="button"
-            onClick={onOpenCalendarModal}
-            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-purple-900/40 hover:bg-purple-800/60 border border-purple-500/30 text-purple-200 text-xs font-medium transition cursor-pointer"
-            title="تقویم ماهانه و جابجایی بین روزها"
-          >
-            <CalendarDays className="w-3.5 h-3.5 text-purple-300" />
-            <span>تقویم ماهانه</span>
+          <div className="w-px h-4 bg-white/10 mx-0.5" />
+
+          <button onClick={onExportJSON} type="button" className="btn btn-ghost text-xs">
+            <FileJson className="w-3.5 h-3.5 text-emerald-400" /> خروجی
+          </button>
+          <input ref={importRef} type="file" accept=".json" className="sr-only"
+            onChange={(e) => { const f = e.target.files?.[0]; if (f) onImportJSON(f); e.target.value = ''; }} />
+          <button onClick={() => importRef.current?.click()} type="button" className="btn btn-ghost text-xs">
+            <Upload className="w-3.5 h-3.5 text-cyan-400" /> بازیابی
           </button>
 
-          {/* Templates */}
-          <button
-            type="button"
-            onClick={onOpenTemplates}
-            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-purple-900/30 hover:bg-purple-800/50 border border-purple-500/20 text-purple-200 text-xs font-medium transition cursor-pointer"
-            title="قالب‌های آماده روزانه"
-          >
-            <Calendar className="w-3.5 h-3.5 text-amber-400" />
-            <span>قالب‌ها</span>
-          </button>
+          <div className="w-px h-4 bg-white/10 mx-0.5" />
 
-          {/* History */}
-          <button
-            type="button"
-            onClick={onOpenHistory}
-            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-purple-900/30 hover:bg-purple-800/50 border border-purple-500/20 text-purple-200 text-xs font-medium transition cursor-pointer"
-            title="تاریخچه روزهای ثبت شده"
-          >
-            <span>تاریخچه</span>
-          </button>
-
-          {/* Backup JSON */}
-          <button
-            type="button"
-            onClick={onExportJSON}
-            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-purple-900/30 hover:bg-purple-800/50 border border-purple-500/20 text-purple-200 text-xs font-medium transition cursor-pointer"
-            title="دانلود بک‌آپ JSON"
-          >
-            <FileJson className="w-3.5 h-3.5 text-purple-300" />
-            <span>خروجی</span>
-          </button>
-
-          <input
-            ref={importInputRef}
-            type="file"
-            accept="application/json,.json"
-            className="sr-only"
-            onChange={handleImportChange}
-            aria-label="انتخاب فایل پشتیبان JSON"
-          />
-          <button
-            type="button"
-            onClick={() => importInputRef.current?.click()}
-            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-purple-900/30 hover:bg-purple-800/50 border border-purple-500/20 text-purple-200 text-xs font-medium transition cursor-pointer"
-            title="بازیابی پشتیبان JSON"
-          >
-            <Upload className="w-3.5 h-3.5 text-cyan-300" />
-            <span>بازیابی</span>
-          </button>
-
-          {/* Sound Toggle */}
-          <button
-            type="button"
-            onClick={onToggleSound}
-            aria-label={soundEnabled ? 'خاموش کردن صدا' : 'روشن کردن صدا'}
-            className={`p-1.5 rounded-lg border transition cursor-pointer ${
+          <button onClick={onToggleSound} type="button" aria-label="صدا"
+            className={`p-2 rounded-lg border cursor-pointer transition ${
               soundEnabled
-                ? 'bg-purple-900/40 border-purple-500/40 text-purple-300'
-                : 'bg-zinc-900/50 border-zinc-700/50 text-zinc-500'
-            }`}
-            title={soundEnabled ? 'صدا روشن است' : 'صدا خاموش است'}
-          >
+                ? 'border-violet-500/25 text-violet-400 hover:text-white bg-violet-950/30'
+                : 'border-white/08 text-slate-600 hover:text-slate-400 bg-transparent'
+            }`}>
             {soundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
           </button>
-
-          {/* Print / PDF */}
-          <button
-            type="button"
-            onClick={onPrint}
-            className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-purple-600/80 hover:bg-purple-500 border border-purple-400/40 text-white text-xs font-semibold shadow-md shadow-purple-950/50 transition cursor-pointer"
-            title="چاپ یا ذخیره PDF"
-          >
-            <Printer className="w-3.5 h-3.5" />
-            <span>چاپ / PDF</span>
+          <button onClick={onPrint} type="button" className="btn btn-primary text-xs">
+            <Printer className="w-3.5 h-3.5" /> چاپ
           </button>
-
-          {/* Reset */}
-          <button
-            type="button"
-            onClick={onReset}
-            aria-label="پاکسازی اطلاعات این روز"
-            className="p-1.5 rounded-lg bg-purple-900/20 hover:bg-red-950/40 border border-purple-500/20 hover:border-red-500/40 text-purple-300 hover:text-red-300 text-xs transition cursor-pointer"
-            title="پاکسازی اطلاعات این روز"
-          >
-            <RotateCcw className="w-4 h-4" />
+          <button onClick={onReset} type="button" className="btn btn-danger text-xs" title="پاکسازی روز">
+            <RotateCcw className="w-3.5 h-3.5" />
           </button>
         </div>
       </div>
 
-      {/* Main Poster Header (Faithful 1:1 reproduction of the image header) */}
-      <div className="app-brand flex items-start justify-between px-2 pt-2 pb-3">
-        {/* Right side in Persian (Left side visually in RTL): Title & Subtitle */}
-        <div className="text-right">
-          <h1 className="text-4xl md:text-5xl font-black tracking-tight text-white drop-shadow-[0_0_20px_rgba(168,85,247,0.75)] font-sans">
-            برنامه‌ی روزانه
-          </h1>
-          <p className="mt-1.5 text-sm md:text-base font-normal text-purple-300/80 tracking-wide">
-            هر روز یک قدم جلوتر
-          </p>
+      {/* ── برند ── */}
+      <div className="app-brand">
+        <div>
+          <h1>برنامه‌ی روزانه</h1>
+          <p className="text-sm text-slate-500 mt-1">هر روز یک قدم جلوتر به سوی اهدافت</p>
         </div>
-
-        {/* نشان فارسی برنامه */}
-        <div className="flex items-center gap-3.5 text-right">
-          <div>
-            <div className="text-xs md:text-sm font-black text-white/90">
-              برنامه‌ریز صعود
-            </div>
-            <div className="text-[10px] md:text-xs font-bold text-purple-300/80">
-              برنامه‌ریزی روزانه
-            </div>
+        <div className="flex items-center gap-3">
+          <div className="hidden sm:block text-right">
+            <p className="text-sm font-black text-slate-300">برنامه‌ریز صعود</p>
+            <p className="text-xs text-slate-600">برنامه‌ریزی روزانه</p>
           </div>
-          {/* Pill / Capsule 3-bar icon matching the top right logo */}
-          <div className="flex items-center gap-1.5 pl-1">
-            <div className="w-2.5 h-9 rounded-full bg-gradient-to-b from-white via-purple-200 to-purple-400 shadow-[0_0_12px_rgba(255,255,255,0.7)]" />
-            <div className="w-2.5 h-9 rounded-full bg-gradient-to-b from-white via-purple-200 to-purple-400 shadow-[0_0_12px_rgba(255,255,255,0.7)]" />
-            <div className="w-2.5 h-9 rounded-full bg-gradient-to-b from-white via-purple-200 to-purple-400 shadow-[0_0_12px_rgba(255,255,255,0.7)]" />
+          <div className="flex items-end gap-[3px]">
+            {[16, 24, 20, 30, 18].map((h, i) => (
+              <div key={i} className="w-[6px] rounded-sm"
+                style={{
+                  height: h, opacity: .5 + i * .1,
+                  background: 'linear-gradient(to top,#6d28d9,#a78bfa)',
+                  boxShadow: '0 0 6px rgba(139,92,246,.4)',
+                }} />
+            ))}
           </div>
         </div>
       </div>

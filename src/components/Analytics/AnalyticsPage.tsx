@@ -46,14 +46,12 @@ export const AnalyticsPage: React.FC<AnalyticsPageProps> = ({
   const scheduleDone = plannerData.schedule?.filter((s) => s.completed && s.task.trim()).length || 0;
   const schedulePercent = scheduleTotal > 0 ? Math.round((scheduleDone / scheduleTotal) * 100) : 0;
 
-  const routinesTotal = plannerData.routines?.length || 0;
-  const routinesDone = plannerData.routines?.filter((routine) => routine.completed).length || 0;
   const habitsTotal = habits.length;
   const habitsDone = habits.filter((h) => h.history?.[todayKey]?.completed).length;
   const habitsPercent = habitsTotal > 0 ? Math.round((habitsDone / habitsTotal) * 100) : 0;
 
-  const totalActions = prioritiesTotal + goalsTotal + scheduleTotal + routinesTotal + habitsTotal;
-  const totalCompleted = prioritiesDone + goalsDone + scheduleDone + routinesDone + habitsDone;
+  const totalActions = prioritiesTotal + goalsTotal + scheduleTotal + habitsTotal;
+  const totalCompleted = prioritiesDone + goalsDone + scheduleDone + habitsDone;
   const overallTodayScore = totalActions > 0 ? Math.round((totalCompleted / totalActions) * 100) : 0;
 
   // 2. Calculate Weekly Trend (Past 7 Days data from LocalStorage)
@@ -70,13 +68,10 @@ export const AnalyticsPage: React.FC<AnalyticsPageProps> = ({
     const gDone = dayData.goals?.filter((goal) => goal.completed && goal.text?.trim()).length || 0;
     const sTotal = dayData.schedule?.filter((s) => s.task?.trim()).length || 0;
     const sDone = dayData.schedule?.filter((s) => s.completed && s.task?.trim()).length || 0;
-    const rTotal = dayData.routines?.length || 0;
-    const rDone = dayData.routines?.filter((routine) => routine.completed).length || 0;
-
     const hDone = habits.filter((h) => h.history?.[key]?.completed).length;
 
-    const tTotal = pTotal + gTotal + sTotal + rTotal + habits.length;
-    const tDone = pDone + gDone + sDone + rDone + hDone;
+    const tTotal = pTotal + gTotal + sTotal + habits.length;
+    const tDone = pDone + gDone + sDone + hDone;
     const score = tTotal > 0 ? Math.min(100, Math.round((tDone / tTotal) * 100)) : 0;
 
     return {
@@ -93,7 +88,6 @@ export const AnalyticsPage: React.FC<AnalyticsPageProps> = ({
   const sectionStats = [
     { name: 'اولویت‌ها', completed: prioritiesDone, total: prioritiesTotal, color: 'from-purple-500 to-indigo-500' },
     { name: 'هدف‌ها', completed: goalsDone, total: goalsTotal, color: 'from-rose-500 to-pink-500' },
-    { name: 'روتین‌ها', completed: routinesDone, total: routinesTotal, color: 'from-emerald-500 to-teal-500' },
     { name: 'برنامه‌ی امروز', completed: scheduleDone, total: scheduleTotal, color: 'from-cyan-500 to-blue-500' },
   ].map((section) => ({
     ...section,
@@ -132,7 +126,7 @@ export const AnalyticsPage: React.FC<AnalyticsPageProps> = ({
       {/* 4 KPI Progress Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 md:gap-4">
         {/* Metric 1: Overall Today Score */}
-        <div className="surface-card p-4 md:p-5 relative overflow-hidden">
+        <div className="surface-card p-4 md:p-5 relative">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-semibold text-purple-300">امتیاز کلی روز</span>
             <Award className="w-4 h-4 text-amber-400" />
@@ -152,7 +146,7 @@ export const AnalyticsPage: React.FC<AnalyticsPageProps> = ({
         </div>
 
         {/* Metric 2: Priorities Completion */}
-        <div className="surface-card p-4 md:p-5 relative overflow-hidden">
+        <div className="surface-card p-4 md:p-5 relative">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-semibold text-purple-300">تحقق اولویت‌ها</span>
             <Target className="w-4 h-4 text-rose-400" />
@@ -172,7 +166,7 @@ export const AnalyticsPage: React.FC<AnalyticsPageProps> = ({
         </div>
 
         {/* Metric 3: Habits Checked */}
-        <div className="surface-card p-4 md:p-5 relative overflow-hidden">
+        <div className="surface-card p-4 md:p-5 relative">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-semibold text-purple-300">عادت‌های انجام‌شده</span>
             <Flame className="w-4 h-4 text-amber-400" />
@@ -192,7 +186,7 @@ export const AnalyticsPage: React.FC<AnalyticsPageProps> = ({
         </div>
 
         {/* Metric 4: Tasks Completed */}
-        <div className="surface-card p-4 md:p-5 relative overflow-hidden">
+        <div className="surface-card p-4 md:p-5 relative">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-semibold text-purple-300">تسک‌های برنامه‌ی امروز</span>
             <CheckCircle2 className="w-4 h-4 text-emerald-400" />
