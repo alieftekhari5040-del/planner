@@ -82,27 +82,31 @@ export const App: React.FC = () => {
                   onGoToToday={navigation.handleGoToToday}
                 />
 
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 md:gap-6 items-stretch">
-                  <div className="lg:col-span-5 flex flex-col gap-5 md:gap-6 justify-between">
-                    <PrioritiesCard
-                      priorities={planner.plannerData.priorities}
-                      onChange={(priorities) => planner.setPlannerData((prev) => ({ ...prev, priorities }))}
-                      onItemToggle={planner.handlePriorityToggle}
-                    />
-
-                    <GoalsCard
-                      goals={planner.plannerData.goals}
-                      onChange={(goals) => planner.setPlannerData((prev) => ({ ...prev, goals }))}
-                      onGoalToggle={planner.handleGoalToggle}
-                    />
-                  </div>
-
-                  <div className="lg:col-span-7 flex flex-col">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 md:gap-6">
+                  {/* برنامه امروز — تمام عرض، جای بیشتر طولی و عرض متعادل */}
+                  <div className="lg:col-span-12">
                     <ScheduleCard
                       schedule={planner.plannerData.schedule}
                       onChange={(schedule) => planner.setPlannerData((prev) => ({ ...prev, schedule }))}
                       onItemToggle={planner.handleScheduleToggle}
                       onApplyPresetTasks={planner.handleApplyPresetSchedule}
+                    />
+                  </div>
+
+                  {/* اولویت‌ها و اهداف — برده شد پایین تا برنامه باز شود */}
+                  <div className="lg:col-span-6">
+                    <PrioritiesCard
+                      priorities={planner.plannerData.priorities}
+                      onChange={(priorities) => planner.setPlannerData((prev) => ({ ...prev, priorities }))}
+                      onItemToggle={planner.handlePriorityToggle}
+                    />
+                  </div>
+
+                  <div className="lg:col-span-6">
+                    <GoalsCard
+                      goals={planner.plannerData.goals}
+                      onChange={(goals) => planner.setPlannerData((prev) => ({ ...prev, goals }))}
+                      onGoalToggle={planner.handleGoalToggle}
                     />
                   </div>
                 </div>
