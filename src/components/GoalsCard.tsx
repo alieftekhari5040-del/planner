@@ -27,7 +27,7 @@ export const GoalsCard: React.FC<GoalsCardProps> = ({
   const total = goals.filter((g) => g.text.trim()).length;
 
   return (
-    <div className="surface-card w-full p-4 md:p-5 relative overflow-hidden flex flex-col">
+    <div className="surface-card w-full p-4 md:p-5 relative flex flex-col">
       {/* glow */}
       <div className="absolute -bottom-8 -right-8 w-40 h-40 bg-sky-600/10 blur-3xl pointer-events-none" />
 

@@ -16,7 +16,7 @@ export const DateSection: React.FC<DateSectionProps> = ({
   selectedDayOfWeek, onSelectDayOfWeek, dateText,
   onChangeDateText, onPreviousDay, onNextDay, onGoToToday,
 }) => (
-  <div className="surface-card w-full p-4 md:p-5 relative overflow-hidden">
+  <div className="surface-card w-full p-4 md:p-5 relative">
     <div className="absolute -top-10 right-1/3 w-64 h-32 bg-violet-600/8 blur-3xl pointer-events-none" />
 
     <div className="flex flex-col gap-4">

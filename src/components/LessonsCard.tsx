@@ -25,7 +25,7 @@ export const LessonsCard: React.FC<LessonsCardProps> = ({ lessons, onChange }) =
   ];
 
   return (
-    <div className="surface-card w-full p-4 md:p-5 relative overflow-hidden">
+    <div className="surface-card w-full p-4 md:p-5 relative">
       {/* glow */}
       <div className="absolute -bottom-8 left-1/3 w-64 h-24 bg-amber-600/8 blur-3xl pointer-events-none" />
 

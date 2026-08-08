@@ -28,7 +28,7 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({
   const total = schedule.filter((s) => s.task.trim()).length;
 
   return (
-    <div className="surface-card w-full p-4 md:p-5 relative overflow-hidden flex flex-col">
+    <div className="surface-card w-full p-4 md:p-5 relative flex flex-col">
       {/* glow */}
       <div className="absolute top-1/3 -left-16 w-52 h-52 bg-emerald-600/8 blur-3xl pointer-events-none" />
 

@@ -210,6 +210,7 @@ button:disabled, input:disabled { cursor: not-allowed; opacity: .5; }
 ══════════════════════════════════════════ */
 .surface-card {
   position: relative;
+  overflow: clip;
   border: 1px solid rgba(139,92,246,.16) !important;
   border-radius: 1.5rem !important;
   background: linear-gradient(158deg,
@@ -228,7 +229,9 @@ button:disabled, input:disabled { cursor: not-allowed; opacity: .5; }
   border-radius: inherit;
   background: linear-gradient(135deg, rgba(139,92,246,.05) 0%, transparent 60%);
   pointer-events: none;
+  z-index: 0;
 }
+.surface-card > * { position: relative; z-index: 1; }
 .surface-card:hover {
   border-color: rgba(139,92,246,.28) !important;
   box-shadow:

@@ -27,7 +27,7 @@ export const PrioritiesCard: React.FC<PrioritiesCardProps> = ({
   const total = priorities.filter((p) => p.text.trim()).length;
 
   return (
-    <div className="surface-card w-full p-4 md:p-5 relative overflow-hidden flex flex-col">
+    <div className="surface-card w-full p-4 md:p-5 relative flex flex-col">
       {/* glow */}
       <div className="absolute -top-8 -left-8 w-40 h-40 bg-violet-600/12 blur-3xl pointer-events-none" />
 
