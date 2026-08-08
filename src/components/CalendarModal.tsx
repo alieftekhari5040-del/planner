@@ -22,7 +22,7 @@ interface CalendarModalProps {
   currentJy: number;
   currentJm: number;
   currentJd: number;
-  onSelectDate: (jy: number, jm: number, jd: number, dayName: string) => void;
+  onSelectDate: (jy: number, jm: number, jd: number, dayName?: string) => void;
 }
 
 export const CalendarModal: React.FC<CalendarModalProps> = ({
