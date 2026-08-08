@@ -46,3 +46,8 @@
 
 [1.1.0]: https://github.com/alieftekhari5040-del/planner/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/alieftekhari5040-del/planner/releases/tag/v1.0.0
+
+## [1.1.1] - ۱۴۰۵/۰۵/۱۸
+
+### رفع اشکال
+- استانداردسازی برنامه امروز: هر ردیف 56px یک‌دست (h-14) با input تک‌خط
